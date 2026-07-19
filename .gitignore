@@ -1,0 +1,21 @@
+# Secrets — never commit API keys
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Build output
+frontend/dist/
+dist/
+
+# Local vector store (regenerated at runtime)
+backend/data/chroma/

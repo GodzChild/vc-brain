@@ -1,0 +1,937 @@
+[
+  {
+    "id": "f-amara-osei",
+    "name": "Amara Osei",
+    "headline": "Ex-NHS data scientist building an LLM copilot for emergency-room triage",
+    "project": "NeuroTriage",
+    "project_description": "An LLM-powered triage copilot that listens to ER intake conversations and drafts priority scores, red-flag alerts, and handover notes in real time — built with clinicians at two London hospitals.",
+    "domains": ["ai", "healthcare"],
+    "stage": "prototype",
+    "location": { "city": "London", "country": "United Kingdom", "lat": 51.5074, "lng": -0.1278 },
+    "avatar_seed": "amara-osei",
+    "scorecard": {
+      "overall": 8.7,
+      "confidence": "high",
+      "dimensions": [
+        {
+          "dimension": "lead",
+          "score": 8.5,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "Leads a 4-person team with two repeat collaborators from a previous hackathon project", "source_url": "https://devpost.com/software/neurotriage", "source_name": "Devpost — NeuroTriage team page", "inferred": false },
+            { "claim": "Organizer of the London Health AI meetup (900+ members)", "source_url": "https://www.meetup.com/london-health-ai", "source_name": "Meetup", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "pitch",
+          "score": 9.0,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "HackZurich Health 2026 winning demo video — live triage of a simulated intake, 40k views", "source_url": "https://www.youtube.com/watch?v=nt-hackzurich26", "source_name": "YouTube — HackZurich finals", "inferred": false },
+            { "claim": "Launch post reached #3 on Hacker News with 412 points", "source_url": "https://news.ycombinator.com/item?id=41573302", "source_name": "Hacker News", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "sell",
+          "score": 8.0,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "Pilot letters of intent from two NHS trusts referenced in the Devpost submission", "source_url": "https://devpost.com/software/neurotriage", "source_name": "Devpost", "inferred": false },
+            { "claim": "14 clinicians on the private beta waitlist per launch-post comments", "source_url": "https://news.ycombinator.com/item?id=41573302", "source_name": "Hacker News thread", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "scale",
+          "score": 8.2,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Previously scaled an NHS analytics dashboard to 30 hospital trusts as technical lead", "source_url": "https://www.linkedin.com/in/amara-osei-health", "source_name": "LinkedIn", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "grit",
+          "score": 9.1,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "Idea-to-working-demo in 11 days; 214 commits in the last 90 days", "source_url": "https://github.com/amara-osei/neurotriage", "source_name": "GitHub commit history", "inferred": false },
+            { "claim": "Rebuilt the audio pipeline from scratch after judges flagged latency — shipped fix in 48h, documented publicly", "source_url": "https://github.com/amara-osei/neurotriage/pull/87", "source_name": "GitHub PR #87", "inferred": false }
+          ]
+        }
+      ],
+      "verify_offline_note": null
+    },
+    "signals": [
+      {
+        "kind": "hackathon_win",
+        "text": "Won HackZurich Health 2026 (health track, 400+ teams)",
+        "date": "2026-05-17",
+        "evidence": { "claim": "Listed as health-track winner on the official results page", "source_url": "https://hackzurich.com/2026/winners", "source_name": "HackZurich 2026 results", "inferred": false }
+      },
+      {
+        "kind": "launch",
+        "text": "Show HN launch hit #3 with 412 points",
+        "date": "2026-06-02",
+        "evidence": { "claim": "Show HN: NeuroTriage — an AI copilot for ER triage", "source_url": "https://news.ycombinator.com/item?id=41573302", "source_name": "Hacker News", "inferred": false }
+      },
+      {
+        "kind": "velocity",
+        "text": "214 commits across the last 90 days, solo-carrying the ML pipeline",
+        "date": "2026-07-10",
+        "evidence": { "claim": "GitHub contribution graph, Apr–Jul 2026", "source_url": "https://github.com/amara-osei/neurotriage/graphs/contributors", "source_name": "GitHub", "inferred": false }
+      }
+    ],
+    "story_beats": [
+      {
+        "beat": "hook",
+        "title": "The ER copilot that won HackZurich",
+        "body": "Six weeks ago, Amara Osei stood on the HackZurich Health stage and triaged a simulated cardiac patient live — her copilot flagging red-line symptoms faster than the human scribe beside it. She never registered on any platform. Profound found her through the results page.",
+        "facts": [
+          { "claim": "HackZurich Health 2026 track winner among 400+ teams", "source_url": "https://hackzurich.com/2026/winners", "source_name": "HackZurich results", "inferred": false }
+        ]
+      },
+      {
+        "beat": "background",
+        "title": "Five years inside the NHS data machine",
+        "body": "Amara spent five years as an NHS data scientist, where she scaled an analytics dashboard to 30 hospital trusts. Fun fact: she runs the 900-member London Health AI meetup, which is where two of her current teammates first saw the prototype.",
+        "facts": [
+          { "claim": "Technical lead on NHS analytics platform rollout to 30 trusts", "source_url": "https://www.linkedin.com/in/amara-osei-health", "source_name": "LinkedIn", "inferred": false },
+          { "claim": "Organizer, London Health AI meetup (900+ members)", "source_url": "https://www.meetup.com/london-health-ai", "source_name": "Meetup", "inferred": false }
+        ]
+      },
+      {
+        "beat": "scorecard",
+        "title": "Scorecard: 8.7 — strongest evidence chain in this result set",
+        "body": "Amara scores high across all five dimensions, with Grit at 9.1: idea-to-demo in 11 days, and a public 48-hour turnaround when judges flagged a latency problem. Every score here traces to a public source — nothing inferred.",
+        "facts": [
+          { "claim": "214 commits in the last 90 days", "source_url": "https://github.com/amara-osei/neurotriage/graphs/contributors", "source_name": "GitHub", "inferred": false }
+        ]
+      },
+      {
+        "beat": "signals",
+        "title": "Three signals in ninety days",
+        "body": "A major hackathon win in May, a #3 Show HN launch in June, and sustained commit velocity through July. Two NHS trusts have signed letters of intent for pilots — traction unusually concrete for a six-week-old prototype.",
+        "facts": [
+          { "claim": "Show HN launch: 412 points, #3 on front page", "source_url": "https://news.ycombinator.com/item?id=41573302", "source_name": "Hacker News", "inferred": false },
+          { "claim": "Pilot LOIs from two NHS trusts", "source_url": "https://devpost.com/software/neurotriage", "source_name": "Devpost", "inferred": false }
+        ]
+      },
+      {
+        "beat": "fit",
+        "title": "Fit: 92 / 100 against your thesis",
+        "body": "Meridian's thesis is pre-seed AI-native health tools in Europe — Amara is the archetype: clinical domain depth, a shipped prototype, and demonstrated pull from real hospital buyers before raising. Check-size fit is clean at pre-seed.",
+        "facts": [
+          { "claim": "Fit assessment is a model opinion derived from your VC profile, not a sourced fact", "source_url": null, "source_name": "Profound fit engine", "inferred": true }
+        ]
+      },
+      {
+        "beat": "contact",
+        "title": "Warm path: two hops via HackZurich",
+        "body": "Your portfolio founder Elias Vogt mentored the HackZurich health track and judged Amara's final demo — a one-message warm intro. Her DMs are open on GitHub, and the team lists a contact address on Devpost.",
+        "facts": [
+          { "claim": "Elias Vogt listed as health-track mentor, HackZurich 2026", "source_url": "https://hackzurich.com/2026/mentors", "source_name": "HackZurich mentors page", "inferred": false }
+        ]
+      }
+    ],
+    "links": {
+      "github": "https://github.com/amara-osei/neurotriage",
+      "devpost": "https://devpost.com/software/neurotriage",
+      "linkedin": "https://www.linkedin.com/in/amara-osei-health",
+      "demo": "https://www.youtube.com/watch?v=nt-hackzurich26"
+    },
+    "discovered_via": ["devpost", "hn", "github"],
+    "first_seen": "2026-05-18",
+    "entity_resolution_confidence": 1.0
+  },
+  {
+    "id": "f-lukas-brandt",
+    "name": "Lukas Brandt",
+    "headline": "Second-time founder predicting glucose crashes before they happen",
+    "project": "GlycoSense",
+    "project_description": "On-device time-series models that read continuous glucose monitor streams and warn Type-1 diabetics of dangerous drops up to 40 minutes early — already live with 300 beta users.",
+    "domains": ["ai", "healthcare", "wearables"],
+    "stage": "launched",
+    "location": { "city": "Berlin", "country": "Germany", "lat": 52.52, "lng": 13.405 },
+    "avatar_seed": "lukas-brandt",
+    "scorecard": {
+      "overall": 8.1,
+      "confidence": "high",
+      "dimensions": [
+        {
+          "dimension": "lead",
+          "score": 7.5,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "Two-person team; co-founder is a former colleague from his first startup", "source_url": "https://glycosense.app/about", "source_name": "GlycoSense — About", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "pitch",
+          "score": 7.8,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "Product Hunt launch: #2 Product of the Day, 640 upvotes", "source_url": "https://www.producthunt.com/posts/glycosense", "source_name": "Product Hunt", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "sell",
+          "score": 8.4,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "300 beta users, 41% week-4 retention, per public changelog", "source_url": "https://glycosense.app/changelog", "source_name": "GlycoSense changelog", "inferred": false },
+            { "claim": "Waitlist crossed 2,100 after EUvsVirus AI 2026 win", "source_url": "https://www.producthunt.com/posts/glycosense", "source_name": "Product Hunt comments", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "scale",
+          "score": 8.3,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "First startup (logistics SaaS) grew to 12 employees before acqui-hire by Sennder", "source_url": "https://www.linkedin.com/in/lukasbrandt-berlin", "source_name": "LinkedIn", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "grit",
+          "score": 8.6,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "Ships a public changelog entry every week for 14 consecutive weeks", "source_url": "https://glycosense.app/changelog", "source_name": "GlycoSense changelog", "inferred": false },
+            { "claim": "Publicly documented pivot after Apple HealthKit API change broke v1", "source_url": "https://news.ycombinator.com/item?id=41390211", "source_name": "Hacker News", "inferred": false }
+          ]
+        }
+      ],
+      "verify_offline_note": null
+    },
+    "signals": [
+      {
+        "kind": "hackathon_win",
+        "text": "Won EUvsVirus AI 2026 health-data challenge",
+        "date": "2026-04-26",
+        "evidence": { "claim": "GlycoSense listed as challenge winner", "source_url": "https://euvsvirus.org/2026/results", "source_name": "EUvsVirus results", "inferred": false }
+      },
+      {
+        "kind": "traction",
+        "text": "300 beta users with 41% week-4 retention",
+        "date": "2026-06-20",
+        "evidence": { "claim": "Retention metrics published in changelog week 12", "source_url": "https://glycosense.app/changelog", "source_name": "GlycoSense changelog", "inferred": false }
+      },
+      {
+        "kind": "launch",
+        "text": "#2 Product of the Day on Product Hunt",
+        "date": "2026-05-28",
+        "evidence": { "claim": "640 upvotes, #2 Product of the Day", "source_url": "https://www.producthunt.com/posts/glycosense", "source_name": "Product Hunt", "inferred": false }
+      }
+    ],
+    "story_beats": [
+      {
+        "beat": "hook",
+        "title": "40 minutes of warning, on your wrist",
+        "body": "Lukas Brandt's models tell a Type-1 diabetic their glucose will crash before they feel a thing — 40 minutes early, running entirely on-device. 300 people already rely on it daily. He hasn't pitched a single fund yet.",
+        "facts": [
+          { "claim": "300 beta users, 41% week-4 retention", "source_url": "https://glycosense.app/changelog", "source_name": "GlycoSense changelog", "inferred": false }
+        ]
+      },
+      {
+        "beat": "background",
+        "title": "Already built and sold a company",
+        "body": "His first startup, a logistics SaaS, grew to 12 people before being acqui-hired by Sennder. Fun fact: he started GlycoSense after his younger sister's T1D diagnosis — the first prototype ran on her CGM data.",
+        "facts": [
+          { "claim": "Founded logistics SaaS acqui-hired by Sennder", "source_url": "https://www.linkedin.com/in/lukasbrandt-berlin", "source_name": "LinkedIn", "inferred": false }
+        ]
+      },
+      {
+        "beat": "scorecard",
+        "title": "Scorecard: 8.1 — the operator profile",
+        "body": "Sell (8.4) and Scale (8.3) lead his card: real retention numbers published openly, and a prior scaling run to 12 employees. Fourteen consecutive weekly changelog entries make his Grit score one of the best-evidenced in the set.",
+        "facts": [
+          { "claim": "14 consecutive weekly changelog entries", "source_url": "https://glycosense.app/changelog", "source_name": "GlycoSense changelog", "inferred": false }
+        ]
+      },
+      {
+        "beat": "signals",
+        "title": "Won in April, launched in May, retained through June",
+        "body": "An EUvsVirus AI win in April, a #2 Product Hunt launch in May, and published retention holding at 41% through June. The waitlist crossed 2,100 — organic, with zero paid acquisition.",
+        "facts": [
+          { "claim": "EUvsVirus AI 2026 health-data challenge winner", "source_url": "https://euvsvirus.org/2026/results", "source_name": "EUvsVirus", "inferred": false },
+          { "claim": "#2 Product of the Day, 640 upvotes", "source_url": "https://www.producthunt.com/posts/glycosense", "source_name": "Product Hunt", "inferred": false }
+        ]
+      },
+      {
+        "beat": "fit",
+        "title": "Fit: 87 / 100 against your thesis",
+        "body": "A second-time founder with live users in European digital health hits Meridian's thesis almost exactly. The one open question for diligence: consumer health hardware-adjacent products can stretch pre-seed check sizes once device partnerships start.",
+        "facts": [
+          { "claim": "Fit assessment is a model opinion derived from your VC profile, not a sourced fact", "source_url": null, "source_name": "Profound fit engine", "inferred": true }
+        ]
+      },
+      {
+        "beat": "contact",
+        "title": "Warm path: your Sennder connection",
+        "body": "Meridian's operating partner Julia Chen worked with Sennder's corp-dev team during the acqui-hire of Lukas's first company — a direct, credible intro path. He is also active in the Berlin Health-Tech Slack.",
+        "facts": [
+          { "claim": "Acqui-hire by Sennder connects to your operating partner's network", "source_url": "https://www.linkedin.com/in/lukasbrandt-berlin", "source_name": "LinkedIn", "inferred": false }
+        ]
+      }
+    ],
+    "links": {
+      "github": "https://github.com/lukasbrandt/glycosense",
+      "producthunt": "https://www.producthunt.com/posts/glycosense",
+      "linkedin": "https://www.linkedin.com/in/lukasbrandt-berlin",
+      "website": "https://glycosense.app"
+    },
+    "discovered_via": ["producthunt", "hn"],
+    "first_seen": "2026-04-27",
+    "entity_resolution_confidence": 1.0
+  },
+  {
+    "id": "f-elena-moreau",
+    "name": "Elena Moreau",
+    "headline": "Radiologist-turned-builder cutting X-ray pre-read time in half",
+    "project": "RadiAssist",
+    "project_description": "A pre-read assistant that drafts structured radiology findings from chest X-rays for clinician sign-off, tuned for the workflows of small European clinics rather than big hospital PACS systems.",
+    "domains": ["ai", "healthcare", "medical-imaging"],
+    "stage": "prototype",
+    "location": { "city": "Paris", "country": "France", "lat": 48.8566, "lng": 2.3522 },
+    "avatar_seed": "elena-moreau",
+    "scorecard": {
+      "overall": 7.9,
+      "confidence": "high",
+      "dimensions": [
+        {
+          "dimension": "lead",
+          "score": 7.0,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Solo founder with two clinical advisors named on the project site", "source_url": "https://radiassist.fr/equipe", "source_name": "RadiAssist — Équipe", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "pitch",
+          "score": 9.2,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "MedHack Paris demo-day video: live pre-read of an anonymized chest film, standing ovation moment at 6:40", "source_url": "https://www.youtube.com/watch?v=ra-medhack26", "source_name": "YouTube — MedHack Paris finals", "inferred": false },
+            { "claim": "Invited talk at the SFR radiology congress junior track", "source_url": "https://congres.sfr-radiologie.fr/2026/programme", "source_name": "SFR congress programme", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "sell",
+          "score": 7.2,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Three Paris-area clinics in an unpaid evaluation pilot", "source_url": "https://radiassist.fr/pilote", "source_name": "RadiAssist pilot page", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "scale",
+          "score": 7.4,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Built the full annotation-to-inference pipeline solo in four months", "source_url": "https://github.com/elenamoreau/radiassist", "source_name": "GitHub", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "grit",
+          "score": 8.0,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "Left a hospital radiology post in March to go full-time; shipped first clinic pilot within 10 weeks", "source_url": "https://www.linkedin.com/in/elena-moreau-radio", "source_name": "LinkedIn", "inferred": false }
+          ]
+        }
+      ],
+      "verify_offline_note": null
+    },
+    "signals": [
+      {
+        "kind": "hackathon_win",
+        "text": "Won MedHack Paris 2026 grand prize",
+        "date": "2026-06-14",
+        "evidence": { "claim": "RadiAssist announced as grand-prize winner", "source_url": "https://medhack.paris/2026/laureats", "source_name": "MedHack Paris results", "inferred": false }
+      },
+      {
+        "kind": "velocity",
+        "text": "Quit hospital job → first live clinic pilot in 10 weeks",
+        "date": "2026-05-30",
+        "evidence": { "claim": "Timeline reconstructed from LinkedIn role change and pilot announcement", "source_url": "https://www.linkedin.com/in/elena-moreau-radio", "source_name": "LinkedIn", "inferred": false }
+      }
+    ],
+    "story_beats": [
+      {
+        "beat": "hook",
+        "title": "The radiologist who automated her own morning",
+        "body": "Elena Moreau spent seven years reading chest films. In June she stood at MedHack Paris and let her model draft the findings on a live anonymized film in 40 seconds — the pre-read that used to eat half her morning. The room stood up.",
+        "facts": [
+          { "claim": "MedHack Paris 2026 grand-prize winner", "source_url": "https://medhack.paris/2026/laureats", "source_name": "MedHack Paris", "inferred": false }
+        ]
+      },
+      {
+        "beat": "background",
+        "title": "Seven years in the reading room",
+        "body": "Elena practiced radiology at a Paris university hospital before going full-time on RadiAssist in March. Fun fact: her training dataset began with films she annotated herself on night shifts — which is why small-clinic workflows, not hospital PACS, are her wedge.",
+        "facts": [
+          { "claim": "Hospital radiologist 2019–2026, per LinkedIn", "source_url": "https://www.linkedin.com/in/elena-moreau-radio", "source_name": "LinkedIn", "inferred": false }
+        ]
+      },
+      {
+        "beat": "scorecard",
+        "title": "Scorecard: 7.9 — carried by a 9.2 Pitch",
+        "body": "Her Pitch score is the highest in this result set: a demo-day video with a genuine standing-ovation moment and an invited congress talk. Lead and Sell are mid-range — she is solo, and pilots are unpaid evaluations so far. Those are the diligence questions.",
+        "facts": [
+          { "claim": "Demo-day video, MedHack Paris finals", "source_url": "https://www.youtube.com/watch?v=ra-medhack26", "source_name": "YouTube", "inferred": false }
+        ]
+      },
+      {
+        "beat": "signals",
+        "title": "Ten weeks from resignation to live pilot",
+        "body": "She left her hospital post in March and had a clinic running the prototype by the end of May, then took the MedHack grand prize in June. Three Paris-area clinics are now evaluating — unpaid, but with real patient-flow data.",
+        "facts": [
+          { "claim": "Three clinics in evaluation pilot", "source_url": "https://radiassist.fr/pilote", "source_name": "RadiAssist", "inferred": false }
+        ]
+      },
+      {
+        "beat": "fit",
+        "title": "Fit: 84 / 100 against your thesis",
+        "body": "Clinical-founder authenticity and a European regulatory-aware wedge fit Meridian's thesis well. Flag for diligence: solo-founder risk and the unpaid pilot pipeline — both classic pre-seed questions rather than disqualifiers.",
+        "facts": [
+          { "claim": "Fit assessment is a model opinion derived from your VC profile, not a sourced fact", "source_url": null, "source_name": "Profound fit engine", "inferred": true }
+        ]
+      },
+      {
+        "beat": "contact",
+        "title": "Warm path: MedHack organizing committee",
+        "body": "Meridian scout network overlaps the MedHack Paris organizing committee (two shared LinkedIn connections). Elena also answers thoughtful GitHub issues on the RadiAssist repo within hours — a credible cold-adjacent path if the warm intro stalls.",
+        "facts": [
+          { "claim": "Active GitHub issue responses, median under 6 hours", "source_url": "https://github.com/elenamoreau/radiassist/issues", "source_name": "GitHub issues", "inferred": false }
+        ]
+      }
+    ],
+    "links": {
+      "github": "https://github.com/elenamoreau/radiassist",
+      "linkedin": "https://www.linkedin.com/in/elena-moreau-radio",
+      "website": "https://radiassist.fr",
+      "demo": "https://www.youtube.com/watch?v=ra-medhack26"
+    },
+    "discovered_via": ["devpost", "github"],
+    "first_seen": "2026-06-15",
+    "entity_resolution_confidence": 1.0
+  },
+  {
+    "id": "f-sofia-lindqvist",
+    "name": "Sofia Lindqvist",
+    "headline": "Former hospital ops lead automating the discharge-planning maze",
+    "project": "CarePath",
+    "project_description": "An agent that assembles hospital discharge plans — home care, equipment, follow-ups, transport — by coordinating across the fragmented systems Swedish hospitals actually use, cutting planning time from hours to minutes.",
+    "domains": ["ai", "healthcare", "operations"],
+    "stage": "prototype",
+    "location": { "city": "Stockholm", "country": "Sweden", "lat": 59.3293, "lng": 18.0686 },
+    "avatar_seed": "sofia-lindqvist",
+    "scorecard": {
+      "overall": 7.4,
+      "confidence": "medium",
+      "dimensions": [
+        {
+          "dimension": "lead",
+          "score": 8.0,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "Teamed with Lukas Brandt at Junction Helsinki 2025 — repeat high-signal collaborator pattern", "source_url": "https://devpost.com/software/dischargebot-junction", "source_name": "Devpost — Junction 2025 entry", "inferred": false },
+            { "claim": "Ran a 40-person hospital operations unit before founding", "source_url": "https://www.linkedin.com/in/sofia-lindqvist-ops", "source_name": "LinkedIn", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "pitch",
+          "score": 6.8,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Junction Helsinki 2026 health-track win with a live discharge-plan demo", "source_url": "https://junction2026.devpost.com/results", "source_name": "Junction results", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "sell",
+          "score": 6.5,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "One Stockholm hospital department piloting internally, per Junction submission", "source_url": "https://junction2026.devpost.com/results", "source_name": "Devpost", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "scale",
+          "score": 7.6,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "Managed 40-person ops unit and a regional systems migration at Karolinska", "source_url": "https://www.linkedin.com/in/sofia-lindqvist-ops", "source_name": "LinkedIn", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "grit",
+          "score": 7.8,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Second consecutive Junction entry on the same problem — iterating publicly across two years", "source_url": "https://devpost.com/software/dischargebot-junction", "source_name": "Devpost history", "inferred": false }
+          ]
+        }
+      ],
+      "verify_offline_note": null
+    },
+    "signals": [
+      {
+        "kind": "hackathon_win",
+        "text": "Won Junction Helsinki 2026 health track",
+        "date": "2026-06-08",
+        "evidence": { "claim": "CarePath listed as health-track winner", "source_url": "https://junction2026.devpost.com/results", "source_name": "Junction 2026 results", "inferred": false }
+      },
+      {
+        "kind": "velocity",
+        "text": "Two-year public iteration arc on the same problem, now with a live department pilot",
+        "date": "2026-06-30",
+        "evidence": { "claim": "2025 and 2026 Junction entries show the same problem attacked twice with a stronger build", "source_url": "https://devpost.com/software/dischargebot-junction", "source_name": "Devpost", "inferred": false }
+      }
+    ],
+    "story_beats": [
+      {
+        "beat": "hook",
+        "title": "She ran the ward. Now she's automating its worst hour.",
+        "body": "Discharge planning is the hour that swallows a hospital shift: five systems, four phone calls, one patient waiting. Sofia Lindqvist ran that process for a 40-person unit — and her agent now assembles a full discharge plan in minutes. It just won Junction Helsinki.",
+        "facts": [
+          { "claim": "Junction Helsinki 2026 health-track winner", "source_url": "https://junction2026.devpost.com/results", "source_name": "Junction results", "inferred": false }
+        ]
+      },
+      {
+        "beat": "background",
+        "title": "Operator first, founder second",
+        "body": "Sofia led hospital operations at Karolinska, including a regional systems migration. Fun fact: she first attacked this problem at Junction 2025 with a hackathon teammate you'll recognize — Lukas Brandt of GlycoSense, also in this result set. The graph found the connection.",
+        "facts": [
+          { "claim": "Teamed with Lukas Brandt at Junction 2025", "source_url": "https://devpost.com/software/dischargebot-junction", "source_name": "Devpost", "inferred": false }
+        ]
+      },
+      {
+        "beat": "scorecard",
+        "title": "Scorecard: 7.4 — a Lead-heavy profile",
+        "body": "Her strongest dimensions are Lead (8.0) and Scale (7.6): she has run teams and shipped systems inside the exact buyer she now sells to. Pitch and Sell trail — one internal pilot, no public launch yet. Classic operator-founder shape.",
+        "facts": [
+          { "claim": "Ran 40-person hospital operations unit", "source_url": "https://www.linkedin.com/in/sofia-lindqvist-ops", "source_name": "LinkedIn", "inferred": false }
+        ]
+      },
+      {
+        "beat": "signals",
+        "title": "Two Junctions, one obsession",
+        "body": "The 2026 win is her second run at the same problem — the 2025 entry was a rough prototype, this year's is live in one Stockholm department. Sustained public iteration on a single unglamorous workflow is a strong grit signal in our model.",
+        "facts": [
+          { "claim": "One hospital department piloting CarePath internally", "source_url": "https://junction2026.devpost.com/results", "source_name": "Devpost", "inferred": false }
+        ]
+      },
+      {
+        "beat": "fit",
+        "title": "Fit: 78 / 100 against your thesis",
+        "body": "Hospital-operations software in the Nordics fits Meridian's Europe-first health thesis, and her buyer-side credibility de-risks sales. The gap to the top of this list is commercial: no launch, no revenue motion yet — earlier than your sweet spot, worth tracking.",
+        "facts": [
+          { "claim": "Fit assessment is a model opinion derived from your VC profile, not a sourced fact", "source_url": null, "source_name": "Profound fit engine", "inferred": true }
+        ]
+      },
+      {
+        "beat": "contact",
+        "title": "Warm path: through Lukas Brandt",
+        "body": "The strongest route is the graph edge itself: Lukas Brandt, her 2025 teammate, is two beats away in this same result set. One conversation can open both doors. She also posts weekly build notes on LinkedIn and responds to comments.",
+        "facts": [
+          { "claim": "TEAMED_WITH edge: Lindqvist ↔ Brandt, Junction 2025", "source_url": "https://devpost.com/software/dischargebot-junction", "source_name": "Devpost", "inferred": false }
+        ]
+      }
+    ],
+    "links": {
+      "github": "https://github.com/sofialindqvist/carepath",
+      "devpost": "https://junction2026.devpost.com/results",
+      "linkedin": "https://www.linkedin.com/in/sofia-lindqvist-ops"
+    },
+    "discovered_via": ["devpost"],
+    "first_seen": "2026-06-09",
+    "entity_resolution_confidence": 1.0
+  },
+  {
+    "id": "f-marco-ricci",
+    "name": "Marco Ricci",
+    "headline": "Biomedical engineer building a ring that hears sepsis coming",
+    "project": "VitalRing",
+    "project_description": "A smart-ring firmware and ML stack that fuses temperature, heart-rate variability, and perfusion signals to flag early sepsis risk in post-surgical patients recovering at home.",
+    "domains": ["ai", "healthcare", "wearables", "hardware"],
+    "stage": "prototype",
+    "location": { "city": "Milan", "country": "Italy", "lat": 45.4642, "lng": 9.19 },
+    "avatar_seed": "marco-ricci",
+    "scorecard": {
+      "overall": 7.0,
+      "confidence": "medium",
+      "dimensions": [
+        {
+          "dimension": "lead",
+          "score": 6.8,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Three-person team from the same Politecnico di Milano lab", "source_url": "https://devpost.com/software/vitalring", "source_name": "Devpost", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "pitch",
+          "score": 7.2,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "HackZurich Health 2026 finalist demo (runner-up to NeuroTriage)", "source_url": "https://hackzurich.com/2026/winners", "source_name": "HackZurich results", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "sell",
+          "score": 6.2,
+          "confidence": "low",
+          "evidence": [
+            { "claim": "No public users or pilots yet; interest from one Milan surgical ward mentioned in demo Q&A", "source_url": "https://www.youtube.com/watch?v=vr-hackzurich26", "source_name": "HackZurich Q&A recording", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "scale",
+          "score": 7.0,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Shipped working firmware + ML pipeline on custom hardware in one semester", "source_url": "https://github.com/marcoricci-mi/vitalring", "source_name": "GitHub", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "grit",
+          "score": 7.6,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Hardware iteration log shows 5 board revisions in 4 months", "source_url": "https://github.com/marcoricci-mi/vitalring/wiki/Hardware-log", "source_name": "GitHub wiki", "inferred": false }
+          ]
+        }
+      ],
+      "verify_offline_note": null
+    },
+    "signals": [
+      {
+        "kind": "hackathon_win",
+        "text": "HackZurich Health 2026 runner-up (health track)",
+        "date": "2026-05-17",
+        "evidence": { "claim": "Listed as health-track runner-up", "source_url": "https://hackzurich.com/2026/winners", "source_name": "HackZurich results", "inferred": false }
+      },
+      {
+        "kind": "velocity",
+        "text": "Five hardware board revisions in four months",
+        "date": "2026-07-01",
+        "evidence": { "claim": "Public hardware iteration log", "source_url": "https://github.com/marcoricci-mi/vitalring/wiki/Hardware-log", "source_name": "GitHub wiki", "inferred": false }
+      }
+    ],
+    "story_beats": [
+      {
+        "beat": "hook",
+        "title": "The ring that listens for sepsis",
+        "body": "Sepsis kills quietly, often after the patient has gone home. Marco Ricci's smart ring watches temperature, HRV, and perfusion around the clock and raises the alarm hours earlier than a worried phone call. It nearly took the HackZurich crown — losing only to NeuroTriage.",
+        "facts": [
+          { "claim": "HackZurich Health 2026 runner-up", "source_url": "https://hackzurich.com/2026/winners", "source_name": "HackZurich results", "inferred": false }
+        ]
+      },
+      {
+        "beat": "background",
+        "title": "Built in a Politecnico lab, revised five times",
+        "body": "Marco and two labmates from Politecnico di Milano designed the board, firmware, and models themselves — five hardware revisions in four months, all logged publicly. Fun fact: revision three failed because a resin casing muffled the optical sensor; the log entry is titled 'lesson: skin, not plastic.'",
+        "facts": [
+          { "claim": "5 board revisions in 4 months, public log", "source_url": "https://github.com/marcoricci-mi/vitalring/wiki/Hardware-log", "source_name": "GitHub wiki", "inferred": false }
+        ]
+      },
+      {
+        "beat": "scorecard",
+        "title": "Scorecard: 7.0 — strong build, unproven demand",
+        "body": "Grit (7.6) and Pitch (7.2) are solid; Sell (6.2, low confidence) is the honest weak spot — no users or pilots yet, just stated interest from one surgical ward. The scorecard says what it can't verify rather than rounding up.",
+        "facts": [
+          { "claim": "Sell dimension scored on a single unverified ward-interest mention", "source_url": "https://www.youtube.com/watch?v=vr-hackzurich26", "source_name": "HackZurich Q&A", "inferred": false }
+        ]
+      },
+      {
+        "beat": "signals",
+        "title": "A near-win and a public build log",
+        "body": "The runner-up finish at HackZurich in May put the project on the map; since then the signal is velocity, not traction — a steady public hardware log and firmware commits, with clinical validation still ahead.",
+        "facts": [
+          { "claim": "Continuous firmware commits Apr–Jul 2026", "source_url": "https://github.com/marcoricci-mi/vitalring", "source_name": "GitHub", "inferred": false }
+        ]
+      },
+      {
+        "beat": "fit",
+        "title": "Fit: 71 / 100 against your thesis",
+        "body": "European, AI-native, healthcare — the thesis boxes tick. The friction is hardware: device CE-marking timelines and manufacturing capital sit outside Meridian's typical pre-seed software motion. Strong watch-list candidate ahead of clinical pilot data.",
+        "facts": [
+          { "claim": "Fit assessment is a model opinion derived from your VC profile, not a sourced fact", "source_url": null, "source_name": "Profound fit engine", "inferred": true }
+        ]
+      },
+      {
+        "beat": "contact",
+        "title": "Warm path: HackZurich alumni channel",
+        "body": "Marco is active in the HackZurich alumni Slack, where your portfolio founder Elias Vogt mentors — the same channel that reaches Amara Osei. His university email is listed on the project's Devpost page.",
+        "facts": [
+          { "claim": "Contact listed on Devpost project page", "source_url": "https://devpost.com/software/vitalring", "source_name": "Devpost", "inferred": false }
+        ]
+      }
+    ],
+    "links": {
+      "github": "https://github.com/marcoricci-mi/vitalring",
+      "devpost": "https://devpost.com/software/vitalring",
+      "demo": "https://www.youtube.com/watch?v=vr-hackzurich26"
+    },
+    "discovered_via": ["devpost", "github"],
+    "first_seen": "2026-05-18",
+    "entity_resolution_confidence": 1.0
+  },
+  {
+    "id": "f-priya-nair",
+    "name": "Priya Nair",
+    "headline": "Ex-Babylon engineer turning multilingual consultations into clean clinical notes",
+    "project": "MedScribe",
+    "project_description": "Speech-to-structured-note pipeline for clinics serving multilingual patients — consultations in Dutch, English, Hindi, or Arabic become coded, EHR-ready notes with the patient's own words preserved as evidence.",
+    "domains": ["ai", "healthcare", "nlp"],
+    "stage": "launched",
+    "location": { "city": "Amsterdam", "country": "Netherlands", "lat": 52.3676, "lng": 4.9041 },
+    "avatar_seed": "priya-nair",
+    "scorecard": {
+      "overall": 6.8,
+      "confidence": "medium",
+      "dimensions": [
+        {
+          "dimension": "lead",
+          "score": 6.5,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Solo founder; contract designer credited on the site", "source_url": "https://medscribe.nl/about", "source_name": "MedScribe — About", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "pitch",
+          "score": 6.4,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Quiet Product Hunt launch (180 upvotes) but strong comment engagement from GPs", "source_url": "https://www.producthunt.com/posts/medscribe", "source_name": "Product Hunt", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "sell",
+          "score": 7.8,
+          "confidence": "high",
+          "evidence": [
+            { "claim": "First paying customers: 4 clinics at €199/month, stated publicly in an indie-hackers interview", "source_url": "https://www.indiehackers.com/post/medscribe-first-mrr", "source_name": "Indie Hackers interview", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "scale",
+          "score": 6.6,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Former senior engineer on Babylon Health's consultation-notes team", "source_url": "https://www.linkedin.com/in/priya-nair-amsterdam", "source_name": "LinkedIn", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "grit",
+          "score": 7.0,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Bootstrapped for 9 months; shipped 4 language pipelines solo", "source_url": "https://www.indiehackers.com/post/medscribe-first-mrr", "source_name": "Indie Hackers", "inferred": false }
+          ]
+        }
+      ],
+      "verify_offline_note": null
+    },
+    "signals": [
+      {
+        "kind": "traction",
+        "text": "First MRR: 4 clinics paying €199/month",
+        "date": "2026-05-05",
+        "evidence": { "claim": "Revenue stated in Indie Hackers interview", "source_url": "https://www.indiehackers.com/post/medscribe-first-mrr", "source_name": "Indie Hackers", "inferred": false }
+      },
+      {
+        "kind": "launch",
+        "text": "Product Hunt launch with strong GP engagement",
+        "date": "2026-04-22",
+        "evidence": { "claim": "180 upvotes; practicing GPs in comments requesting Dutch dialect support", "source_url": "https://www.producthunt.com/posts/medscribe", "source_name": "Product Hunt", "inferred": false }
+      }
+    ],
+    "story_beats": [
+      {
+        "beat": "hook",
+        "title": "Four clinics already pay her",
+        "body": "While most of this result set is pre-revenue, Priya Nair quietly crossed the line that matters: four Amsterdam clinics pay €199 a month for MedScribe, because it writes their multilingual consultation notes better than they do. No fanfare — an Indie Hackers interview surfaced it.",
+        "facts": [
+          { "claim": "4 clinics at €199/month", "source_url": "https://www.indiehackers.com/post/medscribe-first-mrr", "source_name": "Indie Hackers", "inferred": false }
+        ]
+      },
+      {
+        "beat": "background",
+        "title": "She built this once before — inside Babylon",
+        "body": "Priya was a senior engineer on Babylon Health's consultation-notes team, and MedScribe is that product rebuilt for the clinics Babylon never served: multilingual, small, and Dutch. Fun fact: the Arabic pipeline started as a favor for her own GP.",
+        "facts": [
+          { "claim": "Senior engineer, Babylon Health consultation-notes team", "source_url": "https://www.linkedin.com/in/priya-nair-amsterdam", "source_name": "LinkedIn", "inferred": false }
+        ]
+      },
+      {
+        "beat": "scorecard",
+        "title": "Scorecard: 6.8 — a Sell-led card",
+        "body": "Sell (7.8, high confidence) carries the card: real revenue from real clinics, stated on the record. The rest is mid-range — solo founder, quiet launch, bootstrapped pace. The model reads her as commercial-first, unusual and valuable in this set.",
+        "facts": [
+          { "claim": "Only founder in this result set with verified revenue", "source_url": "https://www.indiehackers.com/post/medscribe-first-mrr", "source_name": "Indie Hackers", "inferred": false }
+        ]
+      },
+      {
+        "beat": "signals",
+        "title": "Revenue in May, dialects on the roadmap",
+        "body": "The April Product Hunt launch was small but the comments were the tell: practicing GPs asking for Dutch dialect support — pull, not applause. First MRR followed within two weeks. No hackathon wins here; the market is her judge.",
+        "facts": [
+          { "claim": "GPs requesting features in launch comments", "source_url": "https://www.producthunt.com/posts/medscribe", "source_name": "Product Hunt", "inferred": false }
+        ]
+      },
+      {
+        "beat": "fit",
+        "title": "Fit: 68 / 100 against your thesis",
+        "body": "Revenue-stage discipline in European health AI fits Meridian's thesis, but she indexes slightly off your pre-seed sweet spot: bootstrapped, possibly not raising, and her stated ambition in interviews is a sustainable business rather than venture scale. Worth a conversation to find out.",
+        "facts": [
+          { "claim": "Fit assessment is a model opinion derived from your VC profile, not a sourced fact", "source_url": null, "source_name": "Profound fit engine", "inferred": true }
+        ]
+      },
+      {
+        "beat": "contact",
+        "title": "Warm path: Babylon diaspora",
+        "body": "Two Meridian portfolio engineers are ex-Babylon and overlap her tenure — the strongest intro angle. She's responsive on Indie Hackers and posts a monthly revenue update; referencing the dialect roadmap is the door-opener.",
+        "facts": [
+          { "claim": "Monthly public build updates on Indie Hackers", "source_url": "https://www.indiehackers.com/post/medscribe-first-mrr", "source_name": "Indie Hackers", "inferred": false }
+        ]
+      }
+    ],
+    "links": {
+      "producthunt": "https://www.producthunt.com/posts/medscribe",
+      "linkedin": "https://www.linkedin.com/in/priya-nair-amsterdam",
+      "website": "https://medscribe.nl"
+    },
+    "discovered_via": ["producthunt", "hn"],
+    "first_seen": "2026-04-23",
+    "entity_resolution_confidence": 1.0
+  },
+  {
+    "id": "f-jonas-keller",
+    "name": "Jonas Keller",
+    "headline": "ETH researcher simulating patient flow — if it's the same Jonas Keller",
+    "project": "PulseGraph",
+    "project_description": "A discrete-event simulation engine that models patient flow through hospital departments, letting administrators test staffing and bed-allocation changes in silico before committing to them.",
+    "domains": ["ai", "healthcare", "simulation"],
+    "stage": "prototype",
+    "location": { "city": "Zurich", "country": "Switzerland", "lat": 47.3769, "lng": 8.5417 },
+    "avatar_seed": "jonas-keller",
+    "scorecard": {
+      "overall": 6.2,
+      "confidence": "verify_offline",
+      "dimensions": [
+        {
+          "dimension": "lead",
+          "score": 6.0,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "PulseGraph repo shows 3 contributors from the ETH simulation group", "source_url": "https://github.com/jkeller-eth/pulsegraph", "source_name": "GitHub", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "pitch",
+          "score": 6.5,
+          "confidence": "low",
+          "evidence": [
+            { "claim": "A hackathon-win attribution exists for 'J. Keller' at MedHack Paris side-challenge, but the account cannot be conclusively linked to this founder", "source_url": "https://medhack.paris/2026/laureats", "source_name": "MedHack Paris results", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "sell",
+          "score": 5.5,
+          "confidence": "low",
+          "evidence": [
+            { "claim": "Likely in early discussions with a Swiss cantonal hospital, based on a conference-talk aside — no public confirmation", "source_url": null, "source_name": "Inferred from talk transcript context", "inferred": true }
+          ]
+        },
+        {
+          "dimension": "scale",
+          "score": 6.4,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Simulation engine benchmarked at 10k-bed hospital scale in repo docs", "source_url": "https://github.com/jkeller-eth/pulsegraph/blob/main/docs/benchmarks.md", "source_name": "GitHub docs", "inferred": false }
+          ]
+        },
+        {
+          "dimension": "grit",
+          "score": 6.8,
+          "confidence": "medium",
+          "evidence": [
+            { "claim": "Consistent commit activity across two accounts believed to be the same person", "source_url": "https://github.com/jonaskdev", "source_name": "GitHub — second account", "inferred": false }
+          ]
+        }
+      ],
+      "verify_offline_note": "Two GitHub identities ('jkeller-eth' and 'jonaskdev') could not be conclusively merged, and the MedHack side-challenge win is attributed only to 'J. Keller'. Scores are computed on the merged view; verify identity before outreach."
+    },
+    "signals": [
+      {
+        "kind": "hackathon_win",
+        "text": "MedHack Paris 2026 side-challenge win attributed to 'J. Keller' (unverified link)",
+        "date": "2026-06-14",
+        "evidence": { "claim": "Side-challenge winner listed as 'J. Keller, simulation tooling'", "source_url": "https://medhack.paris/2026/laureats", "source_name": "MedHack Paris results", "inferred": false }
+      },
+      {
+        "kind": "velocity",
+        "text": "Steady commits across two probable accounts since April",
+        "date": "2026-07-05",
+        "evidence": { "claim": "Overlapping commit patterns on jkeller-eth and jonaskdev", "source_url": "https://github.com/jonaskdev", "source_name": "GitHub", "inferred": false }
+      }
+    ],
+    "story_beats": [
+      {
+        "beat": "hook",
+        "title": "A hospital in silico — and an identity puzzle",
+        "body": "PulseGraph can rehearse a hospital's worst Monday before it happens: close a ward in the simulation, watch the queues ripple. The work is real and public. What Profound can't fully verify is whether the two GitHub accounts behind it are the same Jonas Keller — so this profile says so upfront.",
+        "facts": [
+          { "claim": "Simulation benchmarked at 10k-bed scale", "source_url": "https://github.com/jkeller-eth/pulsegraph/blob/main/docs/benchmarks.md", "source_name": "GitHub docs", "inferred": false }
+        ]
+      },
+      {
+        "beat": "background",
+        "title": "The ETH simulation group, probably",
+        "body": "The primary account sits in ETH Zurich's simulation research group, with two labmates contributing. A second account, 'jonaskdev', shows matching commit rhythms and overlapping code style. Our entity-resolution model puts the match at 0.62 — likely, not certain.",
+        "facts": [
+          { "claim": "Entity-resolution confidence 0.62 across two GitHub identities", "source_url": null, "source_name": "Profound entity resolution", "inferred": true }
+        ]
+      },
+      {
+        "beat": "scorecard",
+        "title": "Scorecard: 6.2 — flagged 'verify offline'",
+        "body": "This is what an honest scorecard looks like when the footprint is thin: Sell is scored 5.5 on low confidence, one evidence item is explicitly marked inferred, and the whole card carries a verify-offline flag. A thin public trail is a research posture, not a disqualifier — but it is your diligence call, not ours.",
+        "facts": [
+          { "claim": "Sell dimension rests on an inferred, unconfirmed hospital conversation", "source_url": null, "source_name": "Inferred from talk transcript context", "inferred": true }
+        ]
+      },
+      {
+        "beat": "signals",
+        "title": "A win that needs one phone call to confirm",
+        "body": "The MedHack Paris side-challenge lists 'J. Keller, simulation tooling' as a winner — almost certainly him, not provably him. Commit velocity across both accounts has been steady since April. One email to the MedHack organizers resolves the whole question.",
+        "facts": [
+          { "claim": "Side-challenge win attributed to 'J. Keller'", "source_url": "https://medhack.paris/2026/laureats", "source_name": "MedHack Paris results", "inferred": false }
+        ]
+      },
+      {
+        "beat": "fit",
+        "title": "Fit: 55 / 100 — pending verification",
+        "body": "Hospital-operations simulation fits Meridian's thesis on paper, and research-grade depth is rare. The score is suppressed by uncertainty, not weakness: if identity and the hospital conversation both verify, our model re-rates him into the high 70s. That's the upside case for one phone call.",
+        "facts": [
+          { "claim": "Fit assessment is a model opinion derived from your VC profile, not a sourced fact", "source_url": null, "source_name": "Profound fit engine", "inferred": true }
+        ]
+      },
+      {
+        "beat": "contact",
+        "title": "Verify first, then reach out",
+        "body": "Recommended sequence: confirm the MedHack attribution with the organizers, then reach the primary GitHub account's listed ETH address. Going in cold on the wrong identity burns the intro — this card exists so you don't.",
+        "facts": [
+          { "claim": "ETH contact address listed on primary account profile", "source_url": "https://github.com/jkeller-eth", "source_name": "GitHub profile", "inferred": false }
+        ]
+      }
+    ],
+    "links": {
+      "github": "https://github.com/jkeller-eth/pulsegraph",
+      "github_alt": "https://github.com/jonaskdev"
+    },
+    "discovered_via": ["github", "devpost"],
+    "first_seen": "2026-06-16",
+    "entity_resolution_confidence": 0.62
+  }
+]

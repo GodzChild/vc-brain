@@ -1,0 +1,12 @@
+# Keep the Docker build context small and secret-free.
+.venv/
+**/__pycache__/
+*.pyc
+node_modules/
+frontend/
+.git/
+.claude/
+*.md
+# Never ship secrets into the image (env vars are injected by the host instead).
+backend/.env
+backend/.env.*

@@ -1,0 +1,9 @@
+{
+  "id": "default",
+  "firm": "Meridian Ventures",
+  "thesis": "Pre-seed AI-native health tools in Europe: clinical-workflow software built by domain insiders, backed before the first institutional round.",
+  "focus_domains": ["ai", "healthcare"],
+  "focus_geos": ["Europe"],
+  "preferred_stages": ["prototype", "launched"],
+  "check_size": "$250k–$1M"
+}

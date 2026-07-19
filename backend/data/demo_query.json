@@ -1,0 +1,22 @@
+{
+  "text": "AI healthcare founders in Europe who won a hackathon in the last 3 months",
+  "parsed": {
+    "domains": ["ai", "healthcare"],
+    "signals": ["hackathon_win"],
+    "geo": "Europe",
+    "time_window": "90d",
+    "stage": null,
+    "free_text": "AI healthcare founders in Europe who won a hackathon in the last 3 months"
+  },
+  "highlight_terms": ["AI healthcare", "Europe", "won a hackathon", "last 3 months"],
+  "help_text": "Demo mode — this is a scripted walkthrough over a pre-generated dataset. The next screens are pre-made and won't change based on what you type.",
+  "matched_terms_by_founder": {
+    "f-amara-osei": ["AI healthcare", "Europe", "won a hackathon", "last 3 months"],
+    "f-lukas-brandt": ["AI healthcare", "Europe", "won a hackathon"],
+    "f-elena-moreau": ["AI healthcare", "Europe", "won a hackathon", "last 3 months"],
+    "f-sofia-lindqvist": ["AI healthcare", "Europe", "won a hackathon"],
+    "f-marco-ricci": ["AI healthcare", "Europe", "last 3 months"],
+    "f-priya-nair": ["AI healthcare", "Europe"],
+    "f-jonas-keller": ["AI healthcare", "Europe", "won a hackathon"]
+  }
+}

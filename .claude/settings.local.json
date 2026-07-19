@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(python --version)",
+      "PowerShell(node --version)",
+      "PowerShell(npm --version)",
+      "PowerShell(python -m venv .venv)",
+      "PowerShell(.\\\\.venv\\\\Scripts\\\\python.exe -m pip install --quiet fastapi \"uvicorn[standard]\" \"pydantic>=2.6\" httpx python-dotenv)",
+      "PowerShell(.\\\\.venv\\\\Scripts\\\\python.exe -c \"import fastapi, uvicorn; print\\('deps ok'\\)\")",
+      "PowerShell(npm create vite@latest frontend -- --template react-ts)",
+      "PowerShell(Start-Process -FilePath \".\\\\.venv\\\\Scripts\\\\python.exe\" -ArgumentList \"-m\",\"uvicorn\",\"backend.main:app\",\"--port\",\"8000\" -WorkingDirectory \"C:\\\\Users\\\\bibek\\\\OneDrive\\\\Desktop\\\\VC Brain\" -WindowStyle Hidden)",
+      "PowerShell(Invoke-RestMethod http://localhost:8000/api/health)",
+      "PowerShell($cfg = Invoke-RestMethod http://localhost:8000/api/demo/config; $cfg | ConvertTo-Json; $q = Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/query -ContentType \"application/json\" -Body '{\"text\":\"anything at all\"}'; \"mode=$\\($q.mode\\) took_ms=$\\($q.took_ms\\) candidates=$\\($q.candidates.Count\\)\"; $q.candidates | ForEach-Object { \"$\\($_.fit.fit_score\\)  $\\($_.founder.name\\)  [$\\($_.graph_context -join '; '\\)]\" })",
+      "PowerShell([Console]::OutputEncoding = [Text.Encoding]::UTF8; $g = Invoke-RestMethod http://localhost:8000/api/globe; $g | ForEach-Object { \"#$\\($_.rank\\) $\\($_.name\\) \\($\\($_.lat\\),$\\($_.lng\\)\\) score=$\\($_.score\\) conf=$\\($_.confidence\\)\" }; $s = Invoke-RestMethod http://localhost:8000/api/story/f-jonas-keller; \"story beats: $\\($s.founder.story_beats.Count\\), scorecard conf: $\\($s.founder.scorecard.confidence\\), er_conf: $\\($s.founder.entity_resolution_confidence\\)\"; \"note: $\\($s.founder.scorecard.verify_offline_note\\)\"; $quote = Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/quote -ContentType \"application/json\" -Body '{\"name\":\"Test VC\",\"email\":\"vc@fund.com\",\"firm\":\"Fund I\"}'; $quote; try { Invoke-RestMethod http://localhost:8000/api/founder/nope } catch { \"404 check: $\\($_.Exception.Response.StatusCode\\)\" })",
+      "PowerShell($dst = \"C:\\\\Users\\\\bibek\\\\OneDrive\\\\Desktop\\\\VC Brain\\\\frontend\\\\public\\\\countries.geojson\"; $urls = @\\(\"https://raw.githubusercontent.com/vasturiano/react-globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson\",\"https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson\"\\); foreach \\($u in $urls\\) { try { Invoke-WebRequest -Uri $u -OutFile $dst -UseBasicParsing -ErrorAction Stop; break } catch { Write-Host \"failed: $u\" } }; if \\(Test-Path $dst\\) { $len=\\(Get-Item $dst\\).Length; \"downloaded $len bytes\"; $j = Get-Content $dst -Raw | ConvertFrom-Json; \"features: $\\($j.features.Count\\)\"; \"sample ADMIN: $\\($j.features[0].properties.ADMIN\\) / name: $\\($j.features[0].properties.name\\)\" })",
+      "PowerShell($j = Get-Content \"C:\\\\Users\\\\bibek\\\\OneDrive\\\\Desktop\\\\VC Brain\\\\frontend\\\\public\\\\countries.geojson\" -Raw | ConvertFrom-Json; $want = @\\(\"United Kingdom\",\"Germany\",\"France\",\"Sweden\",\"Italy\",\"Netherlands\",\"Switzerland\"\\); foreach \\($w in $want\\) { $f = $j.features | Where-Object { $_.properties.ADMIN -eq $w }; if \\($f\\) { \"OK  $w -> name=$\\($f.properties.name\\)\" } else { \"MISS $w\" } })"
+    ]
+  }
+}

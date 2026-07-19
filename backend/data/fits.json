@@ -1,0 +1,44 @@
+[
+  {
+    "founder_id": "f-amara-osei",
+    "fit_score": 92,
+    "rationale": "The archetype of Meridian's thesis: a clinical insider (5 years NHS) with a shipped AI prototype, a major European hackathon win, and pull from real hospital buyers — all pre-institutional. Check-size fit is clean at pre-seed.",
+    "inferred": true
+  },
+  {
+    "founder_id": "f-lukas-brandt",
+    "fit_score": 87,
+    "rationale": "Second-time founder with live users and published retention in European digital health matches the thesis almost exactly. Slight discount for hardware-adjacency: device partnerships could stretch beyond a pre-seed software motion.",
+    "inferred": true
+  },
+  {
+    "founder_id": "f-elena-moreau",
+    "fit_score": 84,
+    "rationale": "Clinician-founder authenticity and a regulatory-aware European imaging wedge fit the thesis well. Discounted for solo-founder risk and an unpaid pilot pipeline — classic pre-seed diligence questions rather than disqualifiers.",
+    "inferred": true
+  },
+  {
+    "founder_id": "f-sofia-lindqvist",
+    "fit_score": 78,
+    "rationale": "Nordic hospital-operations software from a buyer-side operator de-risks the sales motion Meridian cares about. Earlier than the sweet spot: no public launch or revenue motion yet — a strong tracking candidate.",
+    "inferred": true
+  },
+  {
+    "founder_id": "f-marco-ricci",
+    "fit_score": 71,
+    "rationale": "Ticks the AI + healthcare + Europe boxes with unusual hardware depth, but CE-marking timelines and manufacturing capital sit outside Meridian's typical pre-seed software motion. Watch-list ahead of clinical pilot data.",
+    "inferred": true
+  },
+  {
+    "founder_id": "f-priya-nair",
+    "fit_score": 68,
+    "rationale": "The only verified revenue in this set, in-thesis geography and domain — but she indexes off the pre-seed venture profile: bootstrapped, possibly not raising, and publicly oriented toward sustainability over venture scale.",
+    "inferred": true
+  },
+  {
+    "founder_id": "f-jonas-keller",
+    "fit_score": 55,
+    "rationale": "Hospital-flow simulation fits the thesis on paper and the research depth is rare, but the score is suppressed by verification risk: a 0.62 identity match and an inferred, unconfirmed hospital conversation. Verifies-up into the high 70s if diligence clears.",
+    "inferred": true
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "name": "vc-brain",
+  "version": "1.0.0",
+  "private": true,
+  "main": "worker/index.ts",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev:worker": "wrangler dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bibekipynb/VC_Brain.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bibekipynb/VC_Brain/issues"
+  },
+  "homepage": "https://github.com/Bibekipynb/VC_Brain#readme",
+  "description": "",
+  "devDependencies": {
+    "@cloudflare/containers": "^0.3.7",
+    "@cloudflare/workers-types": "^5.20260719.1",
+    "wrangler": "^4.112.0"
+  }
+}
