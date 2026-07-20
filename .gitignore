@@ -19,3 +19,8 @@ dist/
 
 # Local vector store (regenerated at runtime)
 backend/data/chroma/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
