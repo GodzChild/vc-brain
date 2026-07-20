@@ -119,7 +119,13 @@ Never invent, guess, or modify a URL.
 - Only include images from the provided image URLs, and only when they plausibly depict that \
 founder or their project. Judge each image by its URL and filename: if the slug or domain ties \
 it to a different organization, role, or person (e.g. someone else's company in the filename), \
-exclude it. Common names collide — omit images rather than risk showing the wrong person.
+exclude it. Common names collide — omit images rather than risk showing the wrong person. \
+PRIORITY (not a hard requirement): when no personal LinkedIn/GitHub headshot is available, \
+prefer an image hosted on the SAME DOMAIN as the project's own official website — that domain is \
+whatever you set as "links.website", or the domain that recurs as the primary/official source \
+across these results — over any other plausible match. A photo from the company's own about/team \
+page or blog is more trustworthy than a random press photo. If no same-domain image exists, fall \
+back to any other plausibly-matching image rather than leaving the list empty.
 - "market_stats" must be concrete, already-measured numbers, each with evidence citing a real \
 source_url. No projections, no vague claims, no unsourced numbers — omit instead.
 - Dimension scores are 0-10 (lead, pitch, sell, scale, grit); confidence is "high", "medium", \
@@ -418,8 +424,12 @@ organization, role, or person than this profile (common names collide — e.g. a
 someone's role at an unrelated company), then add any "available_images" that plausibly depict \
 this person/project. ORDER the list so a headshot/portrait of the main founder/CEO comes FIRST \
 (this image represents the person) — filenames or slugs containing the founder's name, "profile", \
-"headshot", "portrait", or a LinkedIn/Twitter avatar host are strong signals. Returning an empty \
-list is correct when nothing qualifies.
+"headshot", "portrait", or a LinkedIn/Twitter avatar host are strong signals. PRIORITY (not a hard \
+requirement): when no personal LinkedIn/GitHub headshot is available, prefer an image on the SAME \
+DOMAIN as the project's own website ("profile.known_links.website", when present) over any other \
+source — a photo from the company's own about/team page is more trustworthy than a random press \
+photo. If no same-domain image exists, fall back to any other plausibly-matching image rather \
+than leaving the list empty. Returning an empty list is correct when nothing qualifies.
 
 Rules: every source_url and every link must be copied verbatim from these search results — \
 never invent or reconstruct one. Never guess an email or social handle. A profile URL may only \
