@@ -217,6 +217,20 @@ async def _drop_dead_links(founder: Founder) -> Founder:
     return founder
 
 
+_ROLE_PRIORITY = {
+    "ceo": 0, "founder": 0, "co-founder": 1, "cofounder": 1,
+    "cto": 1, "coo": 1, "cmo": 1,
+}
+
+
+def _role_rank(role: str) -> int:
+    r = (role or "").strip().lower()
+    for key, rank in _ROLE_PRIORITY.items():
+        if key in r:
+            return rank
+    return 2  # everyone else (team members, contributors, etc.)
+
+
 # Always aim to surface at least this many candidates when the topic
 # supports it — a single result reads as a broken search.
 MIN_RESULTS = 3
@@ -268,6 +282,10 @@ async def run(query_text: str, limit: int) -> QueryResponse:
         doc = openai_client.founder_document(founder)
         embedding = await openai_client.embed(doc)
         vector_store.upsert(founder.id, embedding, doc)
+        # Last mutation before storage, so it applies regardless of which
+        # extraction/enrichment path added a given team member. Stable sort:
+        # people within the same rank keep their original discovery order.
+        founder.team.sort(key=lambda m: _role_rank(m.role))
         ls.upsert(founder, fit)
         founder_ids.append(founder.id)
 
