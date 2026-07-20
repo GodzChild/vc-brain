@@ -20,7 +20,10 @@ interface SynapseState {
 
   loadGlobe: () => Promise<void>
   setQueryText: (text: string) => void
-  activate: () => void
+  // `queryHint` (e.g. "startup founders") is prepended to the text SENT to
+  // the backend only — the stored queryText (and the visible input) stays
+  // exactly what the user typed.
+  activate: (queryHint?: string) => void
   setHoveredFounderId: (id: string | null) => void
   setFocusedFounderId: (id: string | null) => void
   reset: () => void
@@ -45,7 +48,7 @@ export const useSynapseStore = create<SynapseState>((set, get) => ({
 
   setQueryText: (queryText) => set({ queryText }),
 
-  activate: () => {
+  activate: (queryHint) => {
     if (get().phase !== 'idle' || !get().queryText.trim()) return
     set({ phase: 'activating', longWait: false })
     // In live mode, a cache-miss search (real Tavily + extraction) can take
@@ -56,8 +59,9 @@ export const useSynapseStore = create<SynapseState>((set, get) => ({
       if (get().phase === 'activating') set({ longWait: true })
     }, GLOW_MS + 400)
     const minGlow = new Promise<void>((resolve) => window.setTimeout(resolve, GLOW_MS))
+    const outgoingText = queryHint ? `[Focus: ${queryHint}] ${get().queryText}` : get().queryText
     const queryDone = api
-      .query(get().queryText)
+      .query(outgoingText)
       .then((res) => set({ candidates: res.candidates }))
       .catch(() => {})
     Promise.all([minGlow, queryDone]).then(() => {
