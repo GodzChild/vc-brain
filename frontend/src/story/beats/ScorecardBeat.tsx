@@ -138,6 +138,43 @@ export default function ScorecardBeat({ beat, founder }: { beat: StoryBeat; foun
           ))}
         </Box>
       )}
+
+      {/* Pros / Cons — deterministically derived from the scorecard + vc_metrics
+          above (backend _build_pros_cons), not a separate AI call. */}
+      {((founder.pros_cons?.pros?.length ?? 0) > 0 || (founder.pros_cons?.cons?.length ?? 0) > 0) && (
+        <Box sx={{ mt: 3 }}>
+          <Typography
+            variant="overline"
+            sx={{ color: synapse.violet, letterSpacing: 1.5, display: 'block', mb: 1 }}
+          >
+            Pros &amp; Cons
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+            <Box sx={{ flex: '1 1 220px', minWidth: 220 }}>
+              {(founder.pros_cons.pros ?? []).map((p, i) => (
+                <Typography
+                  key={i}
+                  variant="body2"
+                  sx={{ color: '#cbd5e1', lineHeight: 1.6, mb: 0.5, display: 'flex', gap: 0.8 }}
+                >
+                  <span style={{ color: '#4ade80' }}>+</span> {p}
+                </Typography>
+              ))}
+            </Box>
+            <Box sx={{ flex: '1 1 220px', minWidth: 220 }}>
+              {(founder.pros_cons.cons ?? []).map((c, i) => (
+                <Typography
+                  key={i}
+                  variant="body2"
+                  sx={{ color: '#cbd5e1', lineHeight: 1.6, mb: 0.5, display: 'flex', gap: 0.8 }}
+                >
+                  <span style={{ color: synapse.amber }}>−</span> {c}
+                </Typography>
+              ))}
+            </Box>
+          </Box>
+        </Box>
+      )}
     </Box>
   )
 }

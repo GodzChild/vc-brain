@@ -411,7 +411,34 @@ def _sanitize(entry: dict) -> dict:
         and s["evidence"].get("claim")
         and s["evidence"].get("source_url")
     ]
+
+    entry["pros_cons"] = _build_pros_cons(entry.get("scorecard"), entry["vc_metrics"])
     return entry
+
+
+def _build_pros_cons(scorecard: object, vc_metrics: list[dict]) -> dict:
+    """Deterministic pros/cons list derived from data ALREADY computed above
+    (scorecard dimensions + vc_metrics) — zero new AI calls. A dimension or
+    metric only counts as a "pro" when it's both high-scoring AND has real
+    evidence behind it; a low score is a "con" regardless of evidence
+    depth — a confidently-low score is still informative."""
+    pros: list[str] = []
+    cons: list[str] = []
+    for dim in (scorecard or {}).get("dimensions") or []:
+        if not isinstance(dim, dict):
+            continue
+        score = dim.get("score") or 0
+        if score >= 7.5 and dim.get("evidence"):
+            pros.append(f"Strong {dim.get('dimension', '')} ({score}/10)")
+        elif score <= 4.0:
+            cons.append(f"Weaker {dim.get('dimension', '')} ({score}/10)")
+    for m in vc_metrics:
+        score = m.get("score") or 0
+        if score >= 7.5 and m.get("evidence"):
+            pros.append(m.get("rationale") or m.get("metric", ""))
+        elif score <= 4.0:
+            cons.append(m.get("rationale") or m.get("metric", ""))
+    return {"pros": pros[:5], "cons": cons[:5]}
 
 
 async def extract_founders(

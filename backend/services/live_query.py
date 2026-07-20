@@ -252,9 +252,14 @@ def _role_rank(role: str) -> int:
 MIN_RESULTS = 3
 
 
-async def run(query_text: str, limit: int) -> QueryResponse:
+async def run(query_text: str, limit: int, thesis_override: str | None = None) -> QueryResponse:
     ls = live_store.get_live_store()
     profile = get_store().profile  # VC profile stays demo-seeded regardless of mode
+    if thesis_override:
+        # Session-only: a pasted thesis replaces just the `thesis` text for
+        # THIS query — focus_domains/geos/preferred_stages stay from the demo
+        # seed. Not persisted anywhere; a page refresh loses it.
+        profile = profile.model_copy(update={"thesis": thesis_override})
     target = max(limit, MIN_RESULTS)
 
     query_embedding = await openai_client.embed(query_text)
