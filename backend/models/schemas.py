@@ -113,6 +113,10 @@ class Founder(BaseModel):
     discovered_via: list[str] = []  # sources: github, hn, devpost, ...
     first_seen: str | None = None
     entity_resolution_confidence: float = 1.0  # <1.0 => "possibly same person"
+    # Deterministic {"pros": [...], "cons": [...]} derived from scorecard +
+    # vc_metrics already computed above — no separate AI call. See
+    # _build_pros_cons in openai_client.py.
+    pros_cons: dict = Field(default_factory=dict)
 
 
 class VCProfile(BaseModel):

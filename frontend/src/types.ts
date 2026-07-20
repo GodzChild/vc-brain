@@ -95,6 +95,7 @@ export interface Founder {
   discovered_via: string[]
   first_seen: string | null
   entity_resolution_confidence: number
+  pros_cons: { pros?: string[]; cons?: string[] }
 }
 
 export interface VCProfile {
