@@ -168,12 +168,25 @@ async def _verify_identity(founder: Founder) -> Founder | None:
 
 
 async def _link_is_alive(url: str) -> bool:
+    # LinkedIn blocks unauthenticated/non-browser requests (often a
+    # non-standard 999, sometimes 403) even for perfectly live profiles — an
+    # HTTP check can't reliably tell that apart from a real dead link.
+    # Confirmed against a live query: every linkedin.com/in/... profile came
+    # back 999 and was being wrongly dropped, while unrelated hosts (Twitter,
+    # LinkedIn *company* pages) resolved normally. For linkedin.com only,
+    # treat anything short of a definitive 404/410 as "can't verify, keep
+    # it" — only a real connection failure/timeout (below) still drops it.
+    is_linkedin = "linkedin.com" in url.lower()
     try:
         async with httpx.AsyncClient(timeout=5, follow_redirects=True) as client:
             resp = await client.head(url)
             if resp.status_code >= 400:
                 resp = await client.get(url)  # some hosts reject HEAD
-            return resp.status_code < 400
+            if resp.status_code < 400:
+                return True
+            if is_linkedin and resp.status_code not in (404, 410):
+                return True
+            return False
     except Exception:
         return False
 
