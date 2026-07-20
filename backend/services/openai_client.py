@@ -150,6 +150,12 @@ merely wrote about them — a journalist, a judge, a poster — must never be at
 When in doubt, leave the member's links empty.
 - "team" must list every named person the results attach to the project, including the main \
 founder. If the results name nobody else, a single-entry team is fine.
+- A team member with NO findable links, NO matching image, and only thin evidence is NOT a \
+failure to omit — they still belong in "team" with just their name and role. Give them an honest \
+evidence claim describing the gap itself (e.g. "Author of the paper; no public profile found in \
+the available sources"), "source_url": null, "inferred": true. Leave their "links" as {{}} and \
+do not force an unrelated image into the top-level "images" list on their behalf. An empty, \
+honest entry is correct — never a placeholder to avoid or a reason to drop them.
 - All three "vc_metrics" entries are required (scalability, market_gap, innovation). Ground each \
 rationale in the results; when the results give you nothing for an axis, score conservatively, \
 mark it "low" confidence, and let the evidence list stay empty rather than fabricating support.
@@ -196,7 +202,11 @@ single sentence is a failure. The beats, in order:
       "team": [
         {{"name": "...", "role": "CEO", "links": {{"linkedin": "https://real-result-url"}},
           "evidence": {{"claim": "...", "source_url": "https://real-result-url", "source_name": "...", "inferred": false}},
-          "thesis_relevance": "One sentence tying a concrete result to the vc_thesis, or \"\""}}
+          "thesis_relevance": "One sentence tying a concrete result to the vc_thesis, or \"\""}},
+        {{"name": "...", "role": "Co-author", "links": {{}},
+          "evidence": {{"claim": "Co-author of the paper; no public profile found in the available sources.",
+                        "source_url": null, "source_name": null, "inferred": true}},
+          "thesis_relevance": ""}}
       ],
       "vc_metrics": [
         {{"metric": "scalability", "score": 0.0, "confidence": "...", "rationale": "1-2 sentences",
