@@ -167,28 +167,33 @@ async def _verify_identity(founder: Founder) -> Founder | None:
     return founder
 
 
+_LINKEDIN_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+}
+
+
 async def _link_is_alive(url: str) -> bool:
-    # LinkedIn blocks unauthenticated/non-browser requests (often a
-    # non-standard 999, sometimes 403) even for perfectly live profiles — an
-    # HTTP check can't reliably tell that apart from a real dead link.
-    # Confirmed against a live query: every linkedin.com/in/... profile came
-    # back 999 and was being wrongly dropped, while unrelated hosts (Twitter,
-    # LinkedIn *company* pages) resolved normally. For linkedin.com only,
-    # treat anything short of a definitive 404/410 as "can't verify, keep
-    # it" — only a real connection failure/timeout (below) still drops it.
-    is_linkedin = "linkedin.com" in url.lower()
+    # TRADE-OFF, documented per explicit request: LinkedIn and some other
+    # sites block simple bot requests (commonly 403, 999, or 429) even for
+    # real, working profiles — a bare httpx call can't tell "blocked" apart
+    # from "actually dead". A browser User-Agent alone doesn't reliably fix
+    # this (LinkedIn still blocks it), so any of those three codes — and any
+    # network/timeout exception, equally ambiguous — is treated as "unknown,
+    # keep it" rather than proof of death. A wrongly-kept dead link is a
+    # smaller harm than wrongly-dropping a real one when we can't tell which
+    # it is. Net effect: this now only reliably catches genuine 404s from
+    # sites that don't block bots (github.com, most personal/company sites).
+    # LinkedIn links pass through UNCHECKED by design — their only remaining
+    # accuracy check is the existing name-match guard in openai_client.
     try:
-        async with httpx.AsyncClient(timeout=5, follow_redirects=True) as client:
-            resp = await client.head(url)
-            if resp.status_code >= 400:
-                resp = await client.get(url)  # some hosts reject HEAD
-            if resp.status_code < 400:
+        async with httpx.AsyncClient(timeout=6, follow_redirects=True, headers=_LINKEDIN_HEADERS) as client:
+            resp = await client.get(url)
+            if resp.status_code in (403, 999, 429):
                 return True
-            if is_linkedin and resp.status_code not in (404, 410):
-                return True
-            return False
+            return resp.status_code < 400
     except Exception:
-        return False
+        return True
 
 
 async def _drop_dead_links(founder: Founder) -> Founder:
