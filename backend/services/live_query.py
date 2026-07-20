@@ -28,14 +28,23 @@ MAX_CONTACT_LOOKUPS = 5
 QUERY_CACHE_THRESHOLD = 0.90
 
 
-def _candidates_from_ids(ls: live_store.LiveStore, founder_ids: list[str], relevance: float) -> list[Candidate]:
+def _candidates_from_ids(ls: live_store.LiveStore, founder_ids: list[str]) -> list[Candidate]:
     candidates = []
     for fid in founder_ids:
         founder = ls.get_founder(fid)
         fit = ls.get_fit(fid)
         if not founder or not fit:
             continue
-        candidates.append(Candidate(founder=founder, relevance=relevance, fit=fit, matched_terms=[], graph_context=[]))
+        candidates.append(
+            Candidate(
+                founder=founder,
+                relevance=round(fit.fit_score / 100, 3),
+                fit=fit,
+                matched_terms=[],
+                graph_context=[],
+            )
+        )
+    candidates.sort(key=lambda c: c.fit.fit_score, reverse=True)
     return candidates
 
 
@@ -111,7 +120,7 @@ async def run(query_text: str, limit: int) -> QueryResponse:
     # duplicate ask. Any genuinely new prompt falls through to a fresh search.
     cached_ids = vector_store.lookup_similar_query(query_embedding, threshold=QUERY_CACHE_THRESHOLD)
     if cached_ids:
-        candidates = _candidates_from_ids(ls, cached_ids[:target], relevance=0.95)
+        candidates = _candidates_from_ids(ls, cached_ids[:target])
         if candidates:
             logger.info("Query cache hit for %r — %d founder(s), no live search needed", query_text, len(candidates))
             ls.set_current_result([c.founder.id for c in candidates])
@@ -150,7 +159,7 @@ async def run(query_text: str, limit: int) -> QueryResponse:
 
     return QueryResponse(
         parsed=ParsedQuery(free_text=query_text),
-        candidates=_candidates_from_ids(ls, founder_ids, relevance=0.95),
+        candidates=_candidates_from_ids(ls, founder_ids),
         took_ms=0.0,  # overwritten by the caller with real elapsed time
         mode="live",
     )
