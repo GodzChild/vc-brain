@@ -11,6 +11,8 @@ from __future__ import annotations
 import asyncio
 import logging
 
+import httpx
+
 from backend.models.schemas import Candidate, Evidence, Founder, ParsedQuery, QueryResponse, TeamMember
 from backend.services import live_store, openai_client, tavily_client, vector_store
 from backend.services.demo_store import get_store
@@ -165,6 +167,38 @@ async def _verify_identity(founder: Founder) -> Founder | None:
     return founder
 
 
+async def _link_is_alive(url: str) -> bool:
+    try:
+        async with httpx.AsyncClient(timeout=5, follow_redirects=True) as client:
+            resp = await client.head(url)
+            if resp.status_code >= 400:
+                resp = await client.get(url)  # some hosts reject HEAD
+            return resp.status_code < 400
+    except Exception:
+        return False
+
+
+async def _drop_dead_links(founder: Founder) -> Founder:
+    """Confirms every link actually resolves before the founder is stored —
+    the name-match guard only checks URL format, never liveness. Every unique
+    URL (founder-level + every team member's) is checked exactly once,
+    concurrently, with a short per-link timeout so one hanging host can't
+    block the whole response."""
+    link_sources: list[dict[str, str]] = [founder.links] + [m.links for m in founder.team]
+    unique_urls = list({url for links in link_sources for url in links.values()})
+    if not unique_urls:
+        return founder
+
+    alive_flags = await asyncio.gather(*(_link_is_alive(url) for url in unique_urls))
+    alive_urls = {url for url, ok in zip(unique_urls, alive_flags) if ok}
+
+    for links in link_sources:
+        for key in list(links):
+            if links[key] not in alive_urls:
+                del links[key]
+    return founder
+
+
 # Always aim to surface at least this many candidates when the topic
 # supports it — a single result reads as a broken search.
 MIN_RESULTS = 3
@@ -212,7 +246,7 @@ async def run(query_text: str, limit: int) -> QueryResponse:
         verified_founder = await _verify_identity(founder)
         if verified_founder is None:
             continue  # identity unverified and nothing else supports the project
-        founder = verified_founder
+        founder = await _drop_dead_links(verified_founder)
         doc = openai_client.founder_document(founder)
         embedding = await openai_client.embed(doc)
         vector_store.upsert(founder.id, embedding, doc)
