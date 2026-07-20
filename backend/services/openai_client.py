@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from datetime import date
 
 from openai import AsyncOpenAI
@@ -254,7 +255,18 @@ def _real_person_name(name: object) -> bool:
     return not any(p in n for p in _PLACEHOLDER_SUBSTR)
 
 
-def _clean_member_links(links: object) -> dict:
+def _slug_matches_name(url: str, name: str) -> bool:
+    """A personal profile URL's path should contain some fragment of the person's
+    own name. Code-level check on top of the prompt instruction, since the model
+    won't always comply perfectly."""
+    name_tokens = [t for t in re.split(r"\s+", name.lower()) if len(t) > 2]
+    if not name_tokens:
+        return True
+    path = url.lower()
+    return any(token in path for token in name_tokens)
+
+
+def _clean_member_links(links: object, member_name: str = "") -> dict:
     """A team member's links must be THEIR OWN — a company page
     (linkedin.com/company/…) is not a personal profile, so it's dropped here.
     A member with no real personal link gets a fallback later, in live_query."""
@@ -264,6 +276,9 @@ def _clean_member_links(links: object) -> dict:
             continue
         if "linkedin.com/company/" in v.lower() or "linkedin.com/school/" in v.lower():
             continue
+        if k in ("linkedin", "twitter", "github", "crunchbase", "angellist") and member_name:
+            if not _slug_matches_name(v, member_name):
+                continue
         out[k] = v
     return out
 
@@ -299,7 +314,7 @@ def _sanitize(entry: dict) -> dict:
         {
             "name": m["name"],
             "role": m.get("role") or "",
-            "links": _clean_member_links(m.get("links")),
+            "links": _clean_member_links(m.get("links"), m.get("name") or ""),
             "evidence": _evidence_or_none(m.get("evidence")),
         }
         for m in (entry.get("team") or [])
@@ -513,7 +528,7 @@ async def find_member_links(member_name: str, context: str, tavily_data: dict) -
             ],
         )
         raw = json.loads(resp.choices[0].message.content or "{}")
-        return _clean_member_links(raw.get("links"))
+        return _clean_member_links(raw.get("links"), member_name)
     except Exception:
         logger.warning("Member contact lookup failed for %r", member_name, exc_info=True)
         return {}

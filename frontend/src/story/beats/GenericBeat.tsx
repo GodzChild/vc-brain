@@ -8,6 +8,15 @@ import PersonIcon from '@mui/icons-material/Person'
 import type { Founder, StoryBeat } from '../../types'
 import { synapse } from '../../theme'
 
+// Keys that are a company/fallback surface, not the member's own profile —
+// must read visually distinct from a personal linkedin/twitter/github link
+// (see backend live_query._enrich_member_contacts, which writes these keys
+// only when no personal link was found).
+const FALLBACK_LINK_LABELS: Record<string, string> = {
+  website: 'Company site',
+  company: 'Company page',
+}
+
 /**
  * Renders hook / background / signals / contact beats. Slide 1 (hook) is the
  * company itself; slide 2 (background) is the founder/CEO and shows their
@@ -118,24 +127,27 @@ export default function GenericBeat({ beat, founder }: { beat: StoryBeat; founde
                 </Box>
                 {Object.keys(m.links).length > 0 && (
                   <Box sx={{ display: 'flex', gap: 0.6, flexWrap: 'wrap', mt: 0.6 }}>
-                    {Object.entries(m.links).map(([kind, url]) => (
-                      <Chip
-                        key={kind}
-                        size="small"
-                        label={kind}
-                        component="a"
-                        href={kind === 'email' && !url.startsWith('mailto:') ? `mailto:${url}` : url}
-                        target="_blank"
-                        clickable
-                        sx={{
-                          fontSize: '0.68rem',
-                          height: 20,
-                          color: synapse.cyan,
-                          border: `1px solid ${synapse.line}`,
-                          background: 'transparent',
-                        }}
-                      />
-                    ))}
+                    {Object.entries(m.links).map(([kind, url]) => {
+                      const isFallback = kind in FALLBACK_LINK_LABELS
+                      return (
+                        <Chip
+                          key={kind}
+                          size="small"
+                          label={isFallback ? FALLBACK_LINK_LABELS[kind] : kind}
+                          component="a"
+                          href={kind === 'email' && !url.startsWith('mailto:') ? `mailto:${url}` : url}
+                          target="_blank"
+                          clickable
+                          sx={{
+                            fontSize: '0.68rem',
+                            height: 20,
+                            color: isFallback ? synapse.textDim : synapse.cyan,
+                            border: `1px ${isFallback ? 'dashed' : 'solid'} ${synapse.line}`,
+                            background: 'transparent',
+                          }}
+                        />
+                      )
+                    })}
                   </Box>
                 )}
               </Paper>
