@@ -83,7 +83,7 @@ async def query(req: QueryRequest, request: Request) -> QueryResponse:
 
     if get_settings().live_enabled:
         try:
-            result = await live_query.run(req.text, req.limit)
+            result = await live_query.run(req.text, req.limit, req.thesis_override)
             result.took_ms = round((time.perf_counter() - started) * 1000, 1)
             return result
         except Exception:

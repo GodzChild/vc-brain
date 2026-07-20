@@ -145,6 +145,10 @@ class QueryRequest(BaseModel):
     text: str
     profile_id: str = "default"
     limit: int = 3
+    # Session-only: when set, replaces the demo-seeded profile.thesis for THIS
+    # query only. Not persisted — a page refresh loses it. Everything else
+    # about the VC profile (focus_domains/geos/preferred_stages) is unchanged.
+    thesis_override: str | None = None
 
 
 class Candidate(BaseModel):

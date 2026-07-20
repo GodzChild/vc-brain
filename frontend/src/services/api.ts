@@ -15,11 +15,14 @@ export const api = {
   brain: () => get<BrainGraph>('/api/brain'),
   globe: () => get<GlobePin[]>('/api/globe'),
   story: (founderId: string) => get<StoryResponse>(`/api/story/${founderId}`),
-  query: async (text: string): Promise<QueryResponse> => {
+  query: async (text: string, thesisOverride?: string): Promise<QueryResponse> => {
     const res = await fetch(`${API_BASE}/api/query`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({
+        text,
+        ...(thesisOverride ? { thesis_override: thesisOverride } : {}),
+      }),
     })
     if (!res.ok) throw new Error(`/api/query → ${res.status}`)
     return res.json()

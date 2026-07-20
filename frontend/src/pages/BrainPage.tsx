@@ -7,8 +7,12 @@ import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Chip from '@mui/material/Chip'
+import Collapse from '@mui/material/Collapse'
+import Link from '@mui/material/Link'
 import MicIcon from '@mui/icons-material/Mic'
 import SearchIcon from '@mui/icons-material/Search'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import SponsorStrip from '../components/SponsorStrip'
 import { useSynapseStore } from '../store/useSynapseStore'
 import { pageFade } from '../animations/variants'
@@ -37,6 +41,12 @@ export default function BrainPage() {
   // state — it only matters for the single search about to fire.
   const [entityType, setEntityType] = useState<string | null>(null)
 
+  // Session-only thesis override — never persisted, lost on refresh (see
+  // useSynapseStore.activate / api.query). Page-local: only matters for the
+  // single search about to fire.
+  const [showThesis, setShowThesis] = useState(false)
+  const [thesisText, setThesisText] = useState('')
+
   // Warm the globe chunk (three.js) in the background so navigating to it after
   // a search doesn't suspend mid-transition and stall the route animation.
   useEffect(() => {
@@ -48,8 +58,15 @@ export default function BrainPage() {
   const runSearch = () => {
     if (!queryText.trim()) return
     const hint = ENTITY_TYPE_OPTIONS.find((o) => o.label === entityType)?.hint
-    activate(hint)
+    activate(hint, thesisText.trim() || undefined)
     navigate('/globe')
+  }
+
+  const onThesisFile = (file: File | undefined) => {
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setThesisText(String(reader.result ?? ''))
+    reader.readAsText(file)
   }
 
   return (
@@ -149,12 +166,76 @@ export default function BrainPage() {
               </IconButton>
             </Box>
           </Paper>
+
+          {/* Session-only thesis override (Task 2) — never persisted, lost on
+              refresh. Kept compact (small max-height, internal scroll) so it
+              can't push the sponsor strip below out of place. */}
+          <Box sx={{ width: 'min(720px, 92vw)' }}>
+            <Link
+              component="button"
+              type="button"
+              onClick={() => setShowThesis((v) => !v)}
+              underline="none"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                color: synapse.textDim,
+                fontSize: '0.82rem',
+                mx: 'auto',
+              }}
+            >
+              {showThesis ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+              Add your investment thesis (optional)
+            </Link>
+            <Collapse in={showThesis}>
+              <Paper
+                sx={{
+                  mt: 1,
+                  p: 1.5,
+                  borderRadius: 3,
+                  background: synapse.bgElevated,
+                }}
+              >
+                <TextField
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  maxRows={4}
+                  variant="standard"
+                  value={thesisText}
+                  onChange={(e) => setThesisText(e.target.value)}
+                  placeholder="Paste your thesis — it replaces the demo thesis for this search only."
+                  slotProps={{ input: { disableUnderline: true, sx: { fontSize: '0.9rem' } } }}
+                />
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 0.5 }}>
+                  <Link
+                    component="label"
+                    sx={{ color: synapse.cyan, fontSize: '0.78rem', cursor: 'pointer' }}
+                  >
+                    or upload a .txt file
+                    <input
+                      type="file"
+                      accept=".txt,text/plain"
+                      hidden
+                      onChange={(e) => onThesisFile(e.target.files?.[0])}
+                    />
+                  </Link>
+                </Box>
+              </Paper>
+            </Collapse>
+          </Box>
         </motion.div>
 
-        {/* Sponsor / investor strip — below the prompt. */}
-        <Box sx={{ position: 'absolute', top: '68%', left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
-          <SponsorStrip />
-        </Box>
+        {/* Sponsor / investor strip — below the prompt. Hidden while the
+            thesis panel is open so its expansion never overlaps the strip
+            (this only changes when SponsorStrip renders on THIS page, not
+            the shared component itself). */}
+        {!showThesis && (
+          <Box sx={{ position: 'absolute', top: '68%', left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
+            <SponsorStrip />
+          </Box>
+        )}
       </Box>
     </motion.div>
   )
