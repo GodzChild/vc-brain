@@ -184,14 +184,30 @@ async def _link_is_alive(url: str) -> bool:
     # smaller harm than wrongly-dropping a real one when we can't tell which
     # it is. Net effect: this now only reliably catches genuine 404s from
     # sites that don't block bots (github.com, most personal/company sites).
-    # LinkedIn links pass through UNCHECKED by design — their only remaining
-    # accuracy check is the existing name-match guard in openai_client.
+    #
+    # LinkedIn ALSO serves a soft-404: a real HTTP 200 for a "this page
+    # doesn't exist" state (e.g. linkedin.com/404/), which no status-code
+    # check can catch. For linkedin.com responses only, sniff the body/
+    # final URL for that state and treat it as dead — this is the one case
+    # where we CAN tell "gone" apart from "blocked", so it does not get the
+    # ambiguous 200-is-fine pass below.
     try:
         async with httpx.AsyncClient(timeout=6, follow_redirects=True, headers=_LINKEDIN_HEADERS) as client:
             resp = await client.get(url)
             if resp.status_code in (403, 999, 429):
-                return True
-            return resp.status_code < 400
+                return True  # blocked, not proof of death — keep existing policy
+            if resp.status_code >= 400:
+                return False
+            if "linkedin.com" in url.lower():
+                body = resp.text[:3000].lower()
+                final_path = str(resp.url).lower()
+                if (
+                    "page not found" in body
+                    or "this page doesn't exist" in body
+                    or "/404" in final_path
+                ):
+                    return False
+            return True
     except Exception:
         return True
 
