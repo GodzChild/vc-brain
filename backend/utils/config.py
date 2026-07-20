@@ -23,6 +23,9 @@ class Settings:
         self.neo4j_user: str = os.getenv("NEO4J_USER", "neo4j")
         self.neo4j_password: str | None = os.getenv("NEO4J_PASSWORD") or None
         self.github_token: str | None = os.getenv("GITHUB_TOKEN") or None
+        # Set in Render's dashboard (not committed). Production origin must be
+        # exactly https://proffound.o-cthegreatest.workers.dev (no trailing
+        # slash) — don't guess a stale .pages.dev value here.
         self.cors_origins: list[str] = [
             o.strip()
             for o in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
