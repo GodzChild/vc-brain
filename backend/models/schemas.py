@@ -32,6 +32,9 @@ class TeamMember(BaseModel):
     role: str = ""  # e.g. "CEO", "co-founder", "ML lead", "PhD advisor"
     links: dict[str, str] = {}  # linkedin / github / twitter / email / ...
     evidence: Evidence | None = None
+    # One sentence, grounded in search results, on how this person's specific
+    # background connects to the loaded VC thesis. "" when nothing supports it.
+    thesis_relevance: str = ""
 
 
 class VCMetric(BaseModel):

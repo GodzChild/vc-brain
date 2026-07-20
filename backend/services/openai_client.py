@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from datetime import date
 
 from openai import AsyncOpenAI
@@ -87,6 +88,17 @@ every real one you find. These are the outreach surface an investor needs; treat
 LinkedIn or website as a gap to fill, not an afterthought. (Still: only URLs that literally \
 appear in the results — never guess a handle or construct an email.)
 
+THESIS RELEVANCE per team member: you are given this scout's vc_thesis and \
+vc_focus_domains/vc_focus_geos/vc_preferred_stages in the user payload. For each team member, if \
+the results describe specific prior experience, a past project, a publication, or an achievement \
+that concretely relates to that thesis/those focus areas, write ONE sentence in \
+"thesis_relevance" naming that concrete connection — e.g. "Previously built a clinical trial \
+matching tool at X, directly relevant to this thesis's focus on health AI." This must cite \
+something specific from the results, not restate the thesis in generic terms, and follows the \
+same sourcing rules as everything else — no fabrication. Leave "thesis_relevance": "" when \
+nothing in the results supports a real connection; an empty field is correct far more often than \
+a forced one.
+
 Aim to cite MANY sources — a well-researched profile references 3-10 distinct source URLs across \
 its scorecard, signals, metrics, stats, team, and story beats. Spread real citations widely \
 rather than reusing one link everywhere.
@@ -107,7 +119,13 @@ Never invent, guess, or modify a URL.
 - Only include images from the provided image URLs, and only when they plausibly depict that \
 founder or their project. Judge each image by its URL and filename: if the slug or domain ties \
 it to a different organization, role, or person (e.g. someone else's company in the filename), \
-exclude it. Common names collide — omit images rather than risk showing the wrong person.
+exclude it. Common names collide — omit images rather than risk showing the wrong person. \
+PRIORITY (not a hard requirement): when no personal LinkedIn/GitHub headshot is available, \
+prefer an image hosted on the SAME DOMAIN as the project's own official website — that domain is \
+whatever you set as "links.website", or the domain that recurs as the primary/official source \
+across these results — over any other plausible match. A photo from the company's own about/team \
+page or blog is more trustworthy than a random press photo. If no same-domain image exists, fall \
+back to any other plausibly-matching image rather than leaving the list empty.
 - "market_stats" must be concrete, already-measured numbers, each with evidence citing a real \
 source_url. No projections, no vague claims, no unsourced numbers — omit instead.
 - Dimension scores are 0-10 (lead, pitch, sell, scale, grit); confidence is "high", "medium", \
@@ -132,6 +150,12 @@ merely wrote about them — a journalist, a judge, a poster — must never be at
 When in doubt, leave the member's links empty.
 - "team" must list every named person the results attach to the project, including the main \
 founder. If the results name nobody else, a single-entry team is fine.
+- A team member with NO findable links, NO matching image, and only thin evidence is NOT a \
+failure to omit — they still belong in "team" with just their name and role. Give them an honest \
+evidence claim describing the gap itself (e.g. "Author of the paper; no public profile found in \
+the available sources"), "source_url": null, "inferred": true. Leave their "links" as {{}} and \
+do not force an unrelated image into the top-level "images" list on their behalf. An empty, \
+honest entry is correct — never a placeholder to avoid or a reason to drop them.
 - All three "vc_metrics" entries are required (scalability, market_gap, innovation). Ground each \
 rationale in the results; when the results give you nothing for an axis, score conservatively, \
 mark it "low" confidence, and let the evidence list stay empty rather than fabricating support.
@@ -177,7 +201,12 @@ single sentence is a failure. The beats, in order:
       "images": ["..."],
       "team": [
         {{"name": "...", "role": "CEO", "links": {{"linkedin": "https://real-result-url"}},
-          "evidence": {{"claim": "...", "source_url": "https://real-result-url", "source_name": "...", "inferred": false}}}}
+          "evidence": {{"claim": "...", "source_url": "https://real-result-url", "source_name": "...", "inferred": false}},
+          "thesis_relevance": "One sentence tying a concrete result to the vc_thesis, or \"\""}},
+        {{"name": "...", "role": "Co-author", "links": {{}},
+          "evidence": {{"claim": "Co-author of the paper; no public profile found in the available sources.",
+                        "source_url": null, "source_name": null, "inferred": true}},
+          "thesis_relevance": ""}}
       ],
       "vc_metrics": [
         {{"metric": "scalability", "score": 0.0, "confidence": "...", "rationale": "1-2 sentences",
@@ -254,7 +283,18 @@ def _real_person_name(name: object) -> bool:
     return not any(p in n for p in _PLACEHOLDER_SUBSTR)
 
 
-def _clean_member_links(links: object) -> dict:
+def _slug_matches_name(url: str, name: str) -> bool:
+    """A personal profile URL's path should contain some fragment of the person's
+    own name. Code-level check on top of the prompt instruction, since the model
+    won't always comply perfectly."""
+    name_tokens = [t for t in re.split(r"\s+", name.lower()) if len(t) > 2]
+    if not name_tokens:
+        return True
+    path = url.lower()
+    return any(token in path for token in name_tokens)
+
+
+def _clean_member_links(links: object, member_name: str = "") -> dict:
     """A team member's links must be THEIR OWN — a company page
     (linkedin.com/company/…) is not a personal profile, so it's dropped here.
     A member with no real personal link gets a fallback later, in live_query."""
@@ -264,6 +304,9 @@ def _clean_member_links(links: object) -> dict:
             continue
         if "linkedin.com/company/" in v.lower() or "linkedin.com/school/" in v.lower():
             continue
+        if k in ("linkedin", "twitter", "github", "crunchbase", "angellist") and member_name:
+            if not _slug_matches_name(v, member_name):
+                continue
         out[k] = v
     return out
 
@@ -299,8 +342,9 @@ def _sanitize(entry: dict) -> dict:
         {
             "name": m["name"],
             "role": m.get("role") or "",
-            "links": _clean_member_links(m.get("links")),
+            "links": _clean_member_links(m.get("links"), m.get("name") or ""),
             "evidence": _evidence_or_none(m.get("evidence")),
+            "thesis_relevance": m.get("thesis_relevance") or "",
         }
         for m in (entry.get("team") or [])
         if isinstance(m, dict) and _real_person_name(m.get("name"))
@@ -377,7 +421,11 @@ ENRICHMENT_SYSTEM_PROMPT = """You are Synapse's enrichment analyst. You are give
 already-extracted profile and a fresh, targeted web search about that specific person/project. \
 Extract ONLY additive detail the profile is missing:
 
-- "team": named people with roles, and any socials/emails the results literally contain.
+- "team": named people with roles, and any socials/emails the results literally contain. For \
+each, if the results describe specific prior experience, a past project, a publication, or an \
+achievement that concretely relates to the given "vc_thesis", write ONE sentence in \
+"thesis_relevance" naming that concrete connection — grounded in these results, no fabrication, \
+never a generic restatement of the thesis. Leave "thesis_relevance": "" when nothing supports it.
 - "links": additional real URLs for the project (github, linkedin, twitter, website, demo...).
 - "market_stats": concrete numbers (funding, users, growth, team size, market size) with sources.
 - "images": you are the final auditor of the image list. Return the complete corrected list: \
@@ -386,8 +434,12 @@ organization, role, or person than this profile (common names collide — e.g. a
 someone's role at an unrelated company), then add any "available_images" that plausibly depict \
 this person/project. ORDER the list so a headshot/portrait of the main founder/CEO comes FIRST \
 (this image represents the person) — filenames or slugs containing the founder's name, "profile", \
-"headshot", "portrait", or a LinkedIn/Twitter avatar host are strong signals. Returning an empty \
-list is correct when nothing qualifies.
+"headshot", "portrait", or a LinkedIn/Twitter avatar host are strong signals. PRIORITY (not a hard \
+requirement): when no personal LinkedIn/GitHub headshot is available, prefer an image on the SAME \
+DOMAIN as the project's own website ("profile.known_links.website", when present) over any other \
+source — a photo from the company's own about/team page is more trustworthy than a random press \
+photo. If no same-domain image exists, fall back to any other plausibly-matching image rather \
+than leaving the list empty. Returning an empty list is correct when nothing qualifies.
 
 Rules: every source_url and every link must be copied verbatim from these search results — \
 never invent or reconstruct one. Never guess an email or social handle. A profile URL may only \
@@ -400,12 +452,12 @@ organization, role, or person than this profile, exclude it — common names col
 showing the wrong person is worse than showing no image. market_stats must be concrete \
 measured numbers with sourced evidence — no projections or unsourced claims. \
 Respond with JSON only:
-{"team": [{"name": "...", "role": "...", "links": {}, "evidence": {"claim": "...", "source_url": "...", "source_name": "...", "inferred": false}}],
+{"team": [{"name": "...", "role": "...", "links": {}, "evidence": {"claim": "...", "source_url": "...", "source_name": "...", "inferred": false}, "thesis_relevance": ""}],
  "links": {}, "market_stats": [{"label": "...", "value": "...", "evidence": null}], "images": []}
 """
 
 
-async def enrich_founder(founder: Founder, tavily_data: dict) -> Founder:
+async def enrich_founder(founder: Founder, tavily_data: dict, thesis: str = "") -> Founder:
     """Merges additive detail (team, links, stats, images) from a targeted
     per-founder search into the profile. Merge is additive-only: existing
     values always win, so enrichment can deepen but never overwrite."""
@@ -424,6 +476,7 @@ async def enrich_founder(founder: Founder, tavily_data: dict) -> Founder:
             "known_stats": [s.label for s in founder.market_stats],
             "current_images": founder.images,
         },
+        "vc_thesis": thesis,
         "search_results": [
             {"title": r.get("title"), "url": r.get("url"), "content": r.get("content")} for r in results
         ],
@@ -513,7 +566,105 @@ async def find_member_links(member_name: str, context: str, tavily_data: dict) -
             ],
         )
         raw = json.loads(resp.choices[0].message.content or "{}")
-        return _clean_member_links(raw.get("links"))
+        return _clean_member_links(raw.get("links"), member_name)
     except Exception:
         logger.warning("Member contact lookup failed for %r", member_name, exc_info=True)
         return {}
+
+
+IDENTITY_VERIFICATION_SYSTEM_PROMPT = """You are Synapse's identity verification analyst. A \
+broad discovery search already attached some people's names to a project — your job is to check \
+whether each of them is genuinely affiliated with THIS project, using search results anchored on \
+the project's OWN primary sources (its official website, its GitHub organization).
+
+For each person in "people", return a verdict:
+- "verified": true only if EITHER (a) their name appears among these primary-source results on \
+the project's own official domain or GitHub org, OR (b) at least 2 independent results here \
+(not the same page mirrored twice) agree they hold that role at this project. A single thin or \
+secondary mention is NOT enough — this is the same confidence bar used everywhere else in this \
+system.
+- "verified": false otherwise, INCLUDING when these primary-source results say nothing at all \
+about this person, contradict the claimed role, or turn out to describe a different, unrelated \
+project/organization that merely shares a similar name.
+- "verification_note": one sentence, grounded in what these specific results do or don't say — \
+never a generic statement.
+- "confidence": "high" (primary source, or 2+ independent corroborating results) | "medium" (one \
+credible secondary source) | "low" (thin/indirect) | "verify_offline" (cannot be pinned down from \
+these results at all).
+
+Hard rules:
+- Base every verdict ONLY on the provided primary_source_results — never use outside knowledge of \
+the project, company, or person.
+- Never invent or infer a supporting fact that isn't present in these results.
+- If NONE of the results are actually about this project (a name collision surfaced an unrelated \
+organization), say so in every verification_note and mark every person verified: false.
+
+Respond with JSON only:
+{"verdicts": [{"name": "...", "verified": true, "verification_note": "...", "confidence": "high"}]}
+"""
+
+
+async def verify_identities(founder: Founder, primary_source_data: dict) -> list[dict]:
+    """Checks every person currently attributed to `founder` (the main
+    founder/CEO plus every team member) against primary-source search results
+    for the PROJECT itself — catches a wrong namesake or an unrelated person
+    the broad discovery search happened to attach, before the founder is
+    finalized and stored. Returns one verdict dict per person; live_query
+    applies them."""
+    results = primary_source_data.get("results", [])
+
+    people = [{"name": founder.name, "role": "founder/CEO"}]
+    seen = {founder.name.lower()}
+    for m in founder.team:
+        if m.name.lower() in seen:
+            continue
+        seen.add(m.name.lower())
+        people.append({"name": m.name, "role": m.role or "team member"})
+
+    if not results:
+        return [
+            {
+                **p,
+                "verified": False,
+                "verification_note": "No primary-source results to verify against.",
+                "confidence": "verify_offline",
+            }
+            for p in people
+        ]
+
+    payload = {
+        "project": founder.project,
+        "people": people,
+        "primary_source_results": [
+            {"title": r.get("title"), "url": r.get("url"), "content": r.get("content")} for r in results
+        ],
+    }
+    try:
+        resp = await _client().chat.completions.create(
+            model=CHAT_MODEL,
+            response_format={"type": "json_object"},
+            messages=[
+                {"role": "system", "content": IDENTITY_VERIFICATION_SYSTEM_PROMPT},
+                {"role": "user", "content": json.dumps(payload)},
+            ],
+        )
+        raw = json.loads(resp.choices[0].message.content or "{}")
+        verdicts = raw.get("verdicts", [])
+        return [v for v in verdicts if isinstance(v, dict) and v.get("name")] if isinstance(verdicts, list) else []
+    except Exception:
+        logger.warning("Identity verification failed for project %r", founder.project, exc_info=True)
+        # Fail OPEN on an infra/API error here (same pattern as enrich_founder's
+        # except block: keep what we already had rather than destroy it) — a
+        # transient OpenAI hiccup is a different failure mode than "we checked
+        # and it's wrong," and shouldn't wipe out an otherwise-good extraction.
+        # A genuine verified:false verdict (the model actually ran) still gets
+        # the full strip/drop treatment in live_query._verify_identity.
+        return [
+            {
+                **p,
+                "verified": True,
+                "verification_note": "Verification call failed — kept unverified rather than dropped.",
+                "confidence": "low",
+            }
+            for p in people
+        ]
