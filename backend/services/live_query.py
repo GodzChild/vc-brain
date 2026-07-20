@@ -11,7 +11,7 @@ from __future__ import annotations
 import asyncio
 import logging
 
-from backend.models.schemas import Candidate, Founder, ParsedQuery, QueryResponse, TeamMember
+from backend.models.schemas import Candidate, Evidence, Founder, ParsedQuery, QueryResponse, TeamMember
 from backend.services import live_store, openai_client, tavily_client, vector_store
 from backend.services.demo_store import get_store
 
@@ -104,6 +104,67 @@ async def _enrich_member_contacts(founder: Founder) -> Founder:
     return founder
 
 
+async def _verify_identity(founder: Founder) -> Founder | None:
+    """Anchors extracted identities against the project's OWN primary sources
+    (its official site, its GitHub org) before the founder is finalized — a
+    broad discovery search alone can attach the wrong person to a common name
+    or a thinly-covered project. Runs once per founder, after enrichment (so
+    team members discovered during enrichment get checked too) and before
+    storage. Returns None when the founder entry should be dropped entirely."""
+    try:
+        primary_data = await tavily_client.primary_source_search(founder.project)
+    except Exception:
+        logger.warning(
+            "Primary-source search failed for %r — skipping identity check", founder.project, exc_info=True
+        )
+        return founder
+
+    verdicts = await openai_client.verify_identities(founder, primary_data)
+    verdict_by_name = {v["name"].lower(): v for v in verdicts}
+
+    main_verdict = verdict_by_name.get(founder.name.lower())
+    if main_verdict and not main_verdict.get("verified", False):
+        note = main_verdict.get("verification_note") or "Team identity could not be confirmed from primary sources."
+        # "Something else supports the project being real" = concrete,
+        # evidence-backed substance (_sanitize already required real sources
+        # for every market_stat/signal) or at least one OTHER verified person
+        # — the same bar for "real" the rest of this codebase already uses.
+        has_other_support = bool(founder.market_stats or founder.signals) or any(
+            v.get("verified") for v in verdicts if v.get("name", "").lower() != founder.name.lower()
+        )
+        if not has_other_support:
+            logger.warning(
+                "Dropping founder entry for project %r — identity unverified (%s) and nothing else "
+                "supports the project",
+                founder.project,
+                note,
+            )
+            return None
+        logger.warning("Main founder identity unverified for project %r (%s) — clearing name", founder.project, note)
+        # Same fallback _sanitize applies at extraction time (name -> project
+        # name) — replicated here since _sanitize doesn't run again post-hoc.
+        founder.name = founder.project
+        addition = "Team identity could not be confirmed from primary sources."
+        existing_note = founder.scorecard.verify_offline_note
+        founder.scorecard.verify_offline_note = f"{existing_note} {addition}" if existing_note else addition
+
+    for member in founder.team:
+        if member.name.lower() == founder.name.lower():
+            continue  # main founder already handled above
+        v = verdict_by_name.get(member.name.lower())
+        if v and not v.get("verified", False):
+            note = v.get("verification_note") or "Identity could not be confirmed from primary sources."
+            # This schema has no numeric/enum confidence on TeamMember — the
+            # existing vocabulary for "not confidently sourced" everywhere
+            # else in this codebase is Evidence.inferred=True, so use that.
+            member.evidence = Evidence(claim=note, source_url=None, source_name="Synapse identity check", inferred=True)
+            # Uncertain identity + a confidently-wrong link is worse than the
+            # name alone with no links — drop rather than risk it.
+            member.links = {}
+
+    return founder
+
+
 # Always aim to surface at least this many candidates when the topic
 # supports it — a single result reads as a broken search.
 MIN_RESULTS = 3
@@ -148,6 +209,10 @@ async def run(query_text: str, limit: int) -> QueryResponse:
     for founder, fit in extracted[:target]:
         founder = await _enrich(founder, profile.thesis)
         founder = await _enrich_member_contacts(founder)
+        verified_founder = await _verify_identity(founder)
+        if verified_founder is None:
+            continue  # identity unverified and nothing else supports the project
+        founder = verified_founder
         doc = openai_client.founder_document(founder)
         embedding = await openai_client.embed(doc)
         vector_store.upsert(founder.id, embedding, doc)

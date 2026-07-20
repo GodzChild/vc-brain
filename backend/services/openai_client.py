@@ -560,3 +560,101 @@ async def find_member_links(member_name: str, context: str, tavily_data: dict) -
     except Exception:
         logger.warning("Member contact lookup failed for %r", member_name, exc_info=True)
         return {}
+
+
+IDENTITY_VERIFICATION_SYSTEM_PROMPT = """You are Synapse's identity verification analyst. A \
+broad discovery search already attached some people's names to a project — your job is to check \
+whether each of them is genuinely affiliated with THIS project, using search results anchored on \
+the project's OWN primary sources (its official website, its GitHub organization).
+
+For each person in "people", return a verdict:
+- "verified": true only if EITHER (a) their name appears among these primary-source results on \
+the project's own official domain or GitHub org, OR (b) at least 2 independent results here \
+(not the same page mirrored twice) agree they hold that role at this project. A single thin or \
+secondary mention is NOT enough — this is the same confidence bar used everywhere else in this \
+system.
+- "verified": false otherwise, INCLUDING when these primary-source results say nothing at all \
+about this person, contradict the claimed role, or turn out to describe a different, unrelated \
+project/organization that merely shares a similar name.
+- "verification_note": one sentence, grounded in what these specific results do or don't say — \
+never a generic statement.
+- "confidence": "high" (primary source, or 2+ independent corroborating results) | "medium" (one \
+credible secondary source) | "low" (thin/indirect) | "verify_offline" (cannot be pinned down from \
+these results at all).
+
+Hard rules:
+- Base every verdict ONLY on the provided primary_source_results — never use outside knowledge of \
+the project, company, or person.
+- Never invent or infer a supporting fact that isn't present in these results.
+- If NONE of the results are actually about this project (a name collision surfaced an unrelated \
+organization), say so in every verification_note and mark every person verified: false.
+
+Respond with JSON only:
+{"verdicts": [{"name": "...", "verified": true, "verification_note": "...", "confidence": "high"}]}
+"""
+
+
+async def verify_identities(founder: Founder, primary_source_data: dict) -> list[dict]:
+    """Checks every person currently attributed to `founder` (the main
+    founder/CEO plus every team member) against primary-source search results
+    for the PROJECT itself — catches a wrong namesake or an unrelated person
+    the broad discovery search happened to attach, before the founder is
+    finalized and stored. Returns one verdict dict per person; live_query
+    applies them."""
+    results = primary_source_data.get("results", [])
+
+    people = [{"name": founder.name, "role": "founder/CEO"}]
+    seen = {founder.name.lower()}
+    for m in founder.team:
+        if m.name.lower() in seen:
+            continue
+        seen.add(m.name.lower())
+        people.append({"name": m.name, "role": m.role or "team member"})
+
+    if not results:
+        return [
+            {
+                **p,
+                "verified": False,
+                "verification_note": "No primary-source results to verify against.",
+                "confidence": "verify_offline",
+            }
+            for p in people
+        ]
+
+    payload = {
+        "project": founder.project,
+        "people": people,
+        "primary_source_results": [
+            {"title": r.get("title"), "url": r.get("url"), "content": r.get("content")} for r in results
+        ],
+    }
+    try:
+        resp = await _client().chat.completions.create(
+            model=CHAT_MODEL,
+            response_format={"type": "json_object"},
+            messages=[
+                {"role": "system", "content": IDENTITY_VERIFICATION_SYSTEM_PROMPT},
+                {"role": "user", "content": json.dumps(payload)},
+            ],
+        )
+        raw = json.loads(resp.choices[0].message.content or "{}")
+        verdicts = raw.get("verdicts", [])
+        return [v for v in verdicts if isinstance(v, dict) and v.get("name")] if isinstance(verdicts, list) else []
+    except Exception:
+        logger.warning("Identity verification failed for project %r", founder.project, exc_info=True)
+        # Fail OPEN on an infra/API error here (same pattern as enrich_founder's
+        # except block: keep what we already had rather than destroy it) — a
+        # transient OpenAI hiccup is a different failure mode than "we checked
+        # and it's wrong," and shouldn't wipe out an otherwise-good extraction.
+        # A genuine verified:false verdict (the model actually ran) still gets
+        # the full strip/drop treatment in live_query._verify_identity.
+        return [
+            {
+                **p,
+                "verified": True,
+                "verification_note": "Verification call failed — kept unverified rather than dropped.",
+                "confidence": "low",
+            }
+            for p in people
+        ]
