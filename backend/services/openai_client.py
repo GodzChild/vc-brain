@@ -88,6 +88,17 @@ every real one you find. These are the outreach surface an investor needs; treat
 LinkedIn or website as a gap to fill, not an afterthought. (Still: only URLs that literally \
 appear in the results — never guess a handle or construct an email.)
 
+THESIS RELEVANCE per team member: you are given this scout's vc_thesis and \
+vc_focus_domains/vc_focus_geos/vc_preferred_stages in the user payload. For each team member, if \
+the results describe specific prior experience, a past project, a publication, or an achievement \
+that concretely relates to that thesis/those focus areas, write ONE sentence in \
+"thesis_relevance" naming that concrete connection — e.g. "Previously built a clinical trial \
+matching tool at X, directly relevant to this thesis's focus on health AI." This must cite \
+something specific from the results, not restate the thesis in generic terms, and follows the \
+same sourcing rules as everything else — no fabrication. Leave "thesis_relevance": "" when \
+nothing in the results supports a real connection; an empty field is correct far more often than \
+a forced one.
+
 Aim to cite MANY sources — a well-researched profile references 3-10 distinct source URLs across \
 its scorecard, signals, metrics, stats, team, and story beats. Spread real citations widely \
 rather than reusing one link everywhere.
@@ -178,7 +189,8 @@ single sentence is a failure. The beats, in order:
       "images": ["..."],
       "team": [
         {{"name": "...", "role": "CEO", "links": {{"linkedin": "https://real-result-url"}},
-          "evidence": {{"claim": "...", "source_url": "https://real-result-url", "source_name": "...", "inferred": false}}}}
+          "evidence": {{"claim": "...", "source_url": "https://real-result-url", "source_name": "...", "inferred": false}},
+          "thesis_relevance": "One sentence tying a concrete result to the vc_thesis, or \"\""}}
       ],
       "vc_metrics": [
         {{"metric": "scalability", "score": 0.0, "confidence": "...", "rationale": "1-2 sentences",
@@ -316,6 +328,7 @@ def _sanitize(entry: dict) -> dict:
             "role": m.get("role") or "",
             "links": _clean_member_links(m.get("links"), m.get("name") or ""),
             "evidence": _evidence_or_none(m.get("evidence")),
+            "thesis_relevance": m.get("thesis_relevance") or "",
         }
         for m in (entry.get("team") or [])
         if isinstance(m, dict) and _real_person_name(m.get("name"))
@@ -392,7 +405,11 @@ ENRICHMENT_SYSTEM_PROMPT = """You are Synapse's enrichment analyst. You are give
 already-extracted profile and a fresh, targeted web search about that specific person/project. \
 Extract ONLY additive detail the profile is missing:
 
-- "team": named people with roles, and any socials/emails the results literally contain.
+- "team": named people with roles, and any socials/emails the results literally contain. For \
+each, if the results describe specific prior experience, a past project, a publication, or an \
+achievement that concretely relates to the given "vc_thesis", write ONE sentence in \
+"thesis_relevance" naming that concrete connection — grounded in these results, no fabrication, \
+never a generic restatement of the thesis. Leave "thesis_relevance": "" when nothing supports it.
 - "links": additional real URLs for the project (github, linkedin, twitter, website, demo...).
 - "market_stats": concrete numbers (funding, users, growth, team size, market size) with sources.
 - "images": you are the final auditor of the image list. Return the complete corrected list: \
@@ -415,12 +432,12 @@ organization, role, or person than this profile, exclude it — common names col
 showing the wrong person is worse than showing no image. market_stats must be concrete \
 measured numbers with sourced evidence — no projections or unsourced claims. \
 Respond with JSON only:
-{"team": [{"name": "...", "role": "...", "links": {}, "evidence": {"claim": "...", "source_url": "...", "source_name": "...", "inferred": false}}],
+{"team": [{"name": "...", "role": "...", "links": {}, "evidence": {"claim": "...", "source_url": "...", "source_name": "...", "inferred": false}, "thesis_relevance": ""}],
  "links": {}, "market_stats": [{"label": "...", "value": "...", "evidence": null}], "images": []}
 """
 
 
-async def enrich_founder(founder: Founder, tavily_data: dict) -> Founder:
+async def enrich_founder(founder: Founder, tavily_data: dict, thesis: str = "") -> Founder:
     """Merges additive detail (team, links, stats, images) from a targeted
     per-founder search into the profile. Merge is additive-only: existing
     values always win, so enrichment can deepen but never overwrite."""
@@ -439,6 +456,7 @@ async def enrich_founder(founder: Founder, tavily_data: dict) -> Founder:
             "known_stats": [s.label for s in founder.market_stats],
             "current_images": founder.images,
         },
+        "vc_thesis": thesis,
         "search_results": [
             {"title": r.get("title"), "url": r.get("url"), "content": r.get("content")} for r in results
         ],

@@ -125,6 +125,20 @@ export default function GenericBeat({ beat, founder }: { beat: StoryBeat; founde
                     </Typography>
                   )}
                 </Box>
+                {m.thesis_relevance && (
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: 'block',
+                      mt: 0.6,
+                      color: synapse.amber,
+                      fontStyle: 'italic',
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {m.thesis_relevance}
+                  </Typography>
+                )}
                 {Object.keys(m.links).length > 0 && (
                   <Box sx={{ display: 'flex', gap: 0.6, flexWrap: 'wrap', mt: 0.6 }}>
                     {Object.entries(m.links).map(([kind, url]) => {

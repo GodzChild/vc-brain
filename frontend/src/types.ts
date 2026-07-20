@@ -19,6 +19,7 @@ export interface TeamMember {
   role: string
   links: Record<string, string>
   evidence: Evidence | null
+  thesis_relevance: string
 }
 
 export interface VCMetric {

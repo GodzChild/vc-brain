@@ -48,7 +48,7 @@ def _candidates_from_ids(ls: live_store.LiveStore, founder_ids: list[str]) -> li
     return candidates
 
 
-async def _enrich(founder: Founder) -> Founder:
+async def _enrich(founder: Founder, thesis: str) -> Founder:
     """Second, targeted pass per founder: the broad discovery search is
     hit-or-miss on team rosters, contacts, stats, and images, so a search
     aimed at this specific person/project fills the gaps far more reliably."""
@@ -59,7 +59,7 @@ async def _enrich(founder: Founder) -> Founder:
     except Exception:
         logger.warning("Enrichment search failed for %r", founder.name, exc_info=True)
         return founder
-    return await openai_client.enrich_founder(founder, data)
+    return await openai_client.enrich_founder(founder, data, thesis)
 
 
 async def _member_contact(founder: Founder, member: TeamMember) -> None:
@@ -146,7 +146,7 @@ async def run(query_text: str, limit: int) -> QueryResponse:
 
     founder_ids: list[str] = []
     for founder, fit in extracted[:target]:
-        founder = await _enrich(founder)
+        founder = await _enrich(founder, profile.thesis)
         founder = await _enrich_member_contacts(founder)
         doc = openai_client.founder_document(founder)
         embedding = await openai_client.embed(doc)
