@@ -1,5 +1,9 @@
 # Profound — the VC's own investment brain
 
+## Live Demo
+
+🚀 **Try Profound:** https://proffound.o-cthegreatest.workers.dev/
+
 A VC describes who they're looking for in plain language. Profound doesn't hand back search snippets — it researches the web, builds an evidence-backed founder profile, and presents it as an explorable brain: a knowledge-graph reveal, a globe of ranked candidates, and a cinematic story per founder.
 
 ## The idea
