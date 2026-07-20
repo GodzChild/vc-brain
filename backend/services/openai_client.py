@@ -294,19 +294,52 @@ def _slug_matches_name(url: str, name: str) -> bool:
     return any(token in path for token in name_tokens)
 
 
-def _clean_member_links(links: object, member_name: str = "") -> dict:
-    """A team member's links must be THEIR OWN — a company page
-    (linkedin.com/company/…) is not a personal profile, so it's dropped here.
-    A member with no real personal link gets a fallback later, in live_query."""
+def _is_org_or_company_url(url: str, project: str) -> bool:
+    """True when a link is clearly the PROJECT's own surface (an org GitHub,
+    a company Crunchbase page, a URL keyed to the project name) rather than a
+    personal profile. These were never supposed to contain a person's name —
+    the name-match guard doesn't apply to them, on either the founder's own
+    top-level links or a team member's."""
+    v = url.lower()
+    if "/orgs/" in v or "crunchbase.com/organization/" in v:
+        return True
+    project_tokens = [t for t in re.split(r"\s+", project.lower()) if len(t) > 2]
+    return bool(project_tokens) and any(token in v for token in project_tokens)
+
+
+# Keys that are always personal-profile-shaped — a company link should never
+# legitimately carry one of these, so the name-match guard always applies.
+_ALWAYS_PERSONAL_KEYS = ("linkedin", "twitter", "angellist")
+# Keys that are personal-profile-shaped for a person's OWN github/crunchbase,
+# but can equally be the project's own org/company page — name-matched only
+# when _is_org_or_company_url says it isn't the latter.
+_CONDITIONALLY_PERSONAL_KEYS = ("github", "crunchbase")
+
+
+def _clean_member_links(links: object, member_name: str = "", project: str = "") -> dict:
+    """A person's links (team member OR the founder's own top-level `links`)
+    must be THEIR OWN — a company page (linkedin.com/company/…) is not a
+    personal profile, so it's dropped here regardless of key. A member with
+    no real personal link gets a fallback later, in live_query.
+
+    Only genuinely personal-profile-shaped keys get name-matched:
+    linkedin/twitter/angellist always; github/crunchbase unless they're
+    clearly the project's own org/company page. "website" is never
+    name-matched — a company site was never supposed to contain a person's
+    name in its URL to begin with."""
     out: dict[str, str] = {}
     for k, v in (links or {}).items() if isinstance(links, dict) else []:
         if not isinstance(v, str) or not v:
             continue
         if "linkedin.com/company/" in v.lower() or "linkedin.com/school/" in v.lower():
             continue
-        if k in ("linkedin", "twitter", "github", "crunchbase", "angellist") and member_name:
-            if not _slug_matches_name(v, member_name):
-                continue
+        if member_name:
+            if k in _ALWAYS_PERSONAL_KEYS:
+                if not _slug_matches_name(v, member_name):
+                    continue
+            elif k in _CONDITIONALLY_PERSONAL_KEYS and not _is_org_or_company_url(v, project):
+                if not _slug_matches_name(v, member_name):
+                    continue
         out[k] = v
     return out
 
@@ -322,7 +355,13 @@ def _sanitize(entry: dict) -> dict:
         "lat": location.get("lat") or 0.0,
         "lng": location.get("lng") or 0.0,
     }
-    entry["links"] = {k: v for k, v in (entry.get("links") or {}).items() if isinstance(v, str) and v}
+    # The founder's OWN top-level links must pass the same name-match guard
+    # as team members' — previously this was a plain, unguarded dict
+    # comprehension, so a wrong-slug URL (e.g. a broken linkedin.com/404/)
+    # could land here even when it would have failed the team-member guard.
+    entry["links"] = _clean_member_links(
+        entry.get("links"), entry.get("name") or "", entry.get("project") or ""
+    )
     entry["images"] = [u for u in (entry.get("images") or []) if isinstance(u, str) and u]
     for text_field in ("headline", "project", "project_description"):
         if entry.get(text_field) is None:
@@ -342,7 +381,7 @@ def _sanitize(entry: dict) -> dict:
         {
             "name": m["name"],
             "role": m.get("role") or "",
-            "links": _clean_member_links(m.get("links"), m.get("name") or ""),
+            "links": _clean_member_links(m.get("links"), m.get("name") or "", entry.get("project") or ""),
             "evidence": _evidence_or_none(m.get("evidence")),
             "thesis_relevance": m.get("thesis_relevance") or "",
         }
